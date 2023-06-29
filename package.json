@@ -1,0 +1,65 @@
+{
+	"name": "svault",
+	"version": "1.0.0",
+	"description": "Authentication library for SvelteKit",
+	"keywords": [
+		"Svelte",
+		"SvelteKit"
+	],
+	"homepage": "https://placeholderurl.com",
+	"license": "dummy name license",
+	"author": {
+		"name": "Team Espeon",
+		"url": "https://github.com/oslabs-beta/Svault"
+	},
+	"contributors": [
+		{"name": "Daniel", "url": "https://github.com/parkdaniel731"},
+		{"name": "Michelle", "url": "https://github.com/missmshel"},
+		{"name": "Michael", "url": "https://github.com/mbuenrostro21"},
+		{"name": "Franki", "url": "https://github.com/fpena213"},
+		{"name": "Tristan", "url": "https://github.com/trisbt"}
+	],
+	"repository": "https://github.com/oslabs-beta/Svault",
+	"scripts": {
+		"dev": "vite dev",
+		"build": "vite build && npm run package",
+		"preview": "vite preview",
+		"package": "svelte-kit sync && svelte-package && publint",
+		"prepublishOnly": "npm run package",
+		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
+		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
+		"lint": "eslint ."
+	},
+	"exports": {
+		".": {
+			"types": "./dist/index.d.ts",
+			"svelte": "./dist/index.js"
+		}
+	},
+	"files": [
+		"dist",
+		"!dist/**/*.test.*",
+		"!dist/**/*.spec.*"
+	],
+	"peerDependencies": {
+		"svelte": "^4.0.0"
+	},
+	"devDependencies": {
+		"@sveltejs/adapter-auto": "^2.0.0",
+		"@sveltejs/kit": "^1.20.4",
+		"@sveltejs/package": "^2.0.0",
+		"@typescript-eslint/eslint-plugin": "^5.45.0",
+		"@typescript-eslint/parser": "^5.45.0",
+		"eslint": "^8.28.0",
+		"eslint-plugin-svelte": "^2.30.0",
+		"publint": "^0.1.9",
+		"svelte": "^4.0.0",
+		"svelte-check": "^3.4.3",
+		"tslib": "^2.4.1",
+		"typescript": "^5.0.0",
+		"vite": "^4.3.6"
+	},
+	"svelte": "./dist/index.js",
+	"types": "./dist/index.d.ts",
+	"type": "module"
+}
