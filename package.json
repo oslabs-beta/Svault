@@ -13,11 +13,26 @@
 		"url": "https://github.com/oslabs-beta/Svault"
 	},
 	"contributors": [
-		{"name": "Daniel", "url": "https://github.com/parkdaniel731"},
-		{"name": "Michelle", "url": "https://github.com/missmshel"},
-		{"name": "Michael", "url": "https://github.com/mbuenrostro21"},
-		{"name": "Franki", "url": "https://github.com/fpena213"},
-		{"name": "Tristan", "url": "https://github.com/trisbt"}
+		{
+			"name": "Daniel",
+			"url": "https://github.com/parkdaniel731"
+		},
+		{
+			"name": "Michelle",
+			"url": "https://github.com/missmshel"
+		},
+		{
+			"name": "Michael",
+			"url": "https://github.com/mbuenrostro21"
+		},
+		{
+			"name": "Franki",
+			"url": "https://github.com/fpena213"
+		},
+		{
+			"name": "Tristan",
+			"url": "https://github.com/trisbt"
+		}
 	],
 	"repository": "https://github.com/oslabs-beta/Svault",
 	"scripts": {
@@ -48,6 +63,7 @@
 		"@sveltejs/adapter-auto": "^2.0.0",
 		"@sveltejs/kit": "^1.20.4",
 		"@sveltejs/package": "^2.0.0",
+		"@types/bcrypt": "^5.0.0",
 		"@typescript-eslint/eslint-plugin": "^5.45.0",
 		"@typescript-eslint/parser": "^5.45.0",
 		"eslint": "^8.28.0",
@@ -61,5 +77,9 @@
 	},
 	"svelte": "./dist/index.js",
 	"types": "./dist/index.d.ts",
-	"type": "module"
+	"type": "module",
+	"dependencies": {
+		"bcrypt": "^5.1.0",
+		"bcryptjs": "^2.4.3"
+	}
 }
