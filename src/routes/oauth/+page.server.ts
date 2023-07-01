@@ -4,7 +4,7 @@ import { CLIENT_ID, CLIENT_SECRET} from "$env/static/private";
 
 export const actions = {
     OAuth2: async() => {
-        const redirectURL = 'http://localhost:5173/oauth'
+        const redirectURL = 'http://localhost:5173/google'
 
         const oAuth2Client = new OAuth2Client(
             CLIENT_ID,
