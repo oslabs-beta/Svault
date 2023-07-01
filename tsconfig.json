@@ -10,5 +10,9 @@
 		"sourceMap": true,
 		"strict": true,
 		"moduleResolution": "NodeNext"
-	}
+	},
+	"exclude": [
+		"node_modules",
+		"typings"
+	]
 }
