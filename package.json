@@ -63,6 +63,8 @@
 		"@sveltejs/adapter-auto": "^2.0.0",
 		"@sveltejs/kit": "^1.20.4",
 		"@sveltejs/package": "^2.0.0",
+		"@types/bcrypt": "^5.0.0",
+		"@types/pg": "^8.10.2",
 		"@typescript-eslint/eslint-plugin": "^5.45.0",
 		"@typescript-eslint/parser": "^5.45.0",
 		"eslint": "^8.28.0",
@@ -78,7 +80,8 @@
 	"types": "./dist/index.d.ts",
 	"type": "module",
 	"dependencies": {
-		"@types/google-one-tap": "^1.2.2",
-		"google-auth-library": "^8.9.0"
+		"bcrypt": "^5.1.0",
+		"bcryptjs": "^2.4.3",
+		"pg": "^8.11.1"
 	}
 }
