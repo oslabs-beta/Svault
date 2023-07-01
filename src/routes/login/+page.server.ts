@@ -12,7 +12,7 @@ export const actions: Actions = {
     //this was how the tutorial wrote it, but maybe we can use object destructuring instead here? see pseudocode on next line. we'd have to see what type of value 'data' is
     //const { username, password } = data;
     const username = data.get('username')?.toString();
-    const password = data.get('hashpassword')?.toString();
+    const password = data.get('password')?.toString();
 
     if (username && password) {
       try {

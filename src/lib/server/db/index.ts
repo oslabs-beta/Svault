@@ -1,11 +1,10 @@
 /** need to create import to your database */
 import bcrypt from 'bcrypt';
-
+const db = require('./models');
 
 /** db set up
 //  * const db = new Database <import name>
   */
-//const db = new Database({});
 
 // Function to create user. 
 export async function createUser(
@@ -15,16 +14,16 @@ export async function createUser(
     // 'sql' can be renamed, values can also be modified to meet your database needs and ensure query parity.
     //tutorial inserted the unhashed password into the db, but i adjusted the db insertion to only include the hashpassword for safety reasons.. what do you think?
     const sql = `
-    insert into users (username, hashpassword)
+    insert into users (username, password)
     values ($username, $hashpassword)
     `;
     //adjust workFactor value to your needs, should we use a type alias here?
     const workFactor = 10;
     const hashPassword = await bcrypt.hash(password, workFactor);
     
-    // const stmnt = db.prepare({});
-    // stmnt.run({ username, password: hashPassword });
-    // console.log('Successfully created user!')
+    const stmnt = db.query(sql);
+   //stmnt.run({ username, hashpassword: hashPassword });
+    console.log('Successfully created user!')
 }
 
 //function to check user credentials
@@ -34,7 +33,7 @@ export async function checkUserCredentials(
   password: string
 ): Promise<boolean> {
     const sql = `
-    select hashpassword
+    select password
       from users
      where username = $username
     `;
@@ -43,7 +42,7 @@ export async function checkUserCredentials(
     //ex. const { username } = stmnt;
     const row = stmnt.get({ username });
     if (row) {
-      return bcrypt.compare(password, row.hashpassword);
+      return bcrypt.compare(password, row.password);
     } else {
       // spend some time to "waste" some time
       // this makes brute forcing harder
