@@ -1,6 +1,6 @@
 /** need to create import to your database */
 import bcrypt from 'bcrypt';
-const db = require('./models');
+import db from 'models';
 
 /** db set up
 //  * const db = new Database <import name>

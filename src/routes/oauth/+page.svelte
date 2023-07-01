@@ -1,6 +1,6 @@
 <script lang ='ts'>
 //   window.onload = function () {
-    // google.accounts.id.initialize({
+    // .accounts.id.initialize({
     //   client_id: '144276105113-kkncvrkkfr59iidohhngjqptkiuip8j8.apps.googleusercontent.com',
     //   callback: handleCredentialResponse
     // });

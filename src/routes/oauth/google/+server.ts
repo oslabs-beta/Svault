@@ -3,7 +3,7 @@ import { OAuth2Client } from "google-auth-library";
 import { CLIENT_ID, CLIENT_SECRET } from "$env/static/private";
 
 export const GET = async ({ url }: { url: URL }): Promise<void> => {
-  const redirectURL = 'http://localhost:5173/oauth';
+  const redirectURL = 'http://localhost:5173/google';
   const code = await url.searchParams.get('code');
 
   if (!code) {
