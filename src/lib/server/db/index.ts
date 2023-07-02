@@ -1,6 +1,10 @@
 /** need to create import to your database */
 import bcrypt from 'bcrypt';
+<<<<<<< HEAD
 import db from './models.js';
+=======
+const db from './models';
+>>>>>>> fafb3e8d18167322228b69f583fb6f2de6b8902d
 
 
 // Function to create user. 

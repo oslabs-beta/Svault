@@ -81,7 +81,7 @@
 	"types": "./dist/index.d.ts",
 	"type": "module",
 	"dependencies": {
-		"bcrypt": "^5.1.0",
+		"bcrypt": "^5.0.1",
 		"bcryptjs": "^2.4.3",
 		"pg": "^8.11.1"
 	}
