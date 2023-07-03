@@ -23,12 +23,10 @@ export async function createUser(
 
   const result = await db.query(sql);
   console.log(result);
-  //stmnt.run({ username, hashpassword: hashPassword });
-  // console.log('Successfully created user!')
 }
 
 //function to check user credentials
-//the excepted return type is a Promise with return of boolean type
+//the accepted return type is a Promise with return of boolean type
 export async function checkUserCredentials(
   username: string,
   password: string
@@ -61,40 +59,10 @@ export async function checkUserCredentials(
       // spend some time to "waste" some time
       // this makes brute forcing harder
       console.log('username does not exist');
-      bcrypt.hash(password, workFactor);
+      await bcrypt.hash(password, workFactor);
       return false;
     }
-    return result;
   } else {
     return `result is err ${result}`;
   }
 }
-
-// const response = await db.query(queryString, [], (err: Error, result: object) => {
-//   //Send username to frontend
-//   console.log('result is', result);
-//   const workFactor = 10;
-//   if (!err) {
-//     console.log('got query result')
-//     if (result.rows[0]) {
-//       console.log('username exists, now we compare password')
-//       bcrypt.compare(password, result.rows[0].password)
-//       .then(res => {
-//         return res // return true
-//       })
-//       .catch(err => {
-//         console.log(err.message)
-//         return err.message
-//       })
-//     } else {
-//       //this means the username doesn't exist in the db but dont tell the client that
-//       // spend some time to "waste" some time
-//       // this makes brute forcing harder
-//       console.log('username does not exist')
-//       bcrypt.hash(password, workFactor);
-//       return false;
-//     }
-//   } else {
-//     console.log(err)
-//   }
-// })
