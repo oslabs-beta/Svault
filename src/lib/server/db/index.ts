@@ -1,10 +1,6 @@
 /** need to create import to your database */
 import bcrypt from 'bcrypt';
-<<<<<<< HEAD
-import db from './models.js';
-=======
-const db from './models';
->>>>>>> fafb3e8d18167322228b69f583fb6f2de6b8902d
+import db from './models.js'
 
 
 // Function to create user. 
@@ -13,6 +9,9 @@ export async function createUser(
     password: string
 ): Promise<void> {
     // 'sql' can be renamed, values can also be modified to meet your database needs and ensure query parity.
+    await db.connectToDB()
+    .then((res) => console.log('connected'));
+    
     const sql = `
     insert into users (username, password)
     values ($username, $hashpassword)
@@ -21,9 +20,11 @@ export async function createUser(
     const workFactor = 10;
     const hashPassword = await bcrypt.hash(password, workFactor);
     
-    db.query(sql);
-  //  stmnt.run({ username, hashpassword: hashPassword });
-    console.log('Successfully created user!')
+    
+    //db.query(sql)
+    //stmnt.run({ username, hashpassword: hashPassword });
+    // console.log('Successfully created user!')
+
 }
 
 //function to check user credentials
