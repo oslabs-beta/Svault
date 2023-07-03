@@ -1,12 +1,11 @@
 import { Pool } from 'pg';
-import { PG_URI } from "$env/static/private";
+import { PG_URI } from '$env/static/private';
 
 // create a new pool here using the connection string above
 const db = new Pool({
   connectionString: PG_URI,
   port: Number(import.meta.env.POSTGRES_PORT || 5432),
 });
-
 
 // Schema for the  database can be found below:
 // https://github.com/CodesmithLLC/unit-10SB-databases/blob/master/docs/assets/images/schema.png
@@ -16,11 +15,11 @@ const db = new Pool({
 // This will be required in the controllers to be the access point to the database
 export default {
   query: (text, params?, callback?) => {
-    console.log('executed query', text)
-    return db.query(text, params, callback)
+    console.log('executed query', text);
+    return db.query(text, params, callback);
   },
-  connectToDB: async () => await db.connect()
-}
+  connectToDB: async () => await db.connect(),
+};
 
 //scratch project connection.. maybe we try it this way
 
