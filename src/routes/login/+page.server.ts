@@ -1,8 +1,8 @@
 //uses createUser method from our server/db file. (currently we have no db connected, so that's why it is erroring)
 
-import { checkUserCredentials, createUser } from '$lib/server/db';
+import { checkUserCredentials, createUser } from '$lib/server/db/index.ts';
 //createSession not created yet
-import { createSession } from '$lib/server/sessionStore';
+//import { createSession } from '$lib/server/sessionStore';
 import { fail, redirect, type Actions, type Cookies } from '@sveltejs/kit';
 
 //now these Actions will be available to the rest of the app
@@ -13,6 +13,7 @@ export const actions: Actions = {
     //const { username, password } = data;
     const username = data.get('username')?.toString();
     const password = data.get('password')?.toString();
+    console.log(username, password);
 
     if (username && password) {
       try {
@@ -38,7 +39,7 @@ export const actions: Actions = {
         return fail(401, { errorMessage: 'Invalid username or password' });
       }
       //need to add this function
-      performLogin(cookies, username);
+      //performLogin(cookies, username);
 
       // redirect to home page
       throw redirect(303, '/');
