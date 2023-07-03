@@ -33,17 +33,20 @@ export const actions: Actions = {
     const password = data.get('password')?.toString();
 
     if (username && password) {
-      const res = await checkUserCredentials(username, password);
-
-      if (!res) {
-        return fail(401, { errorMessage: 'Invalid username or password' });
-      }
-      //need to add this function
-      //performLogin(cookies, username);
-
-      // redirect to home page
-      throw redirect(303, '/');
+      await checkUserCredentials(username, password)
+      .then((res) => {
+        console.log('res is ', res)
+        if (!res) {
+          return fail(401, { errorMessage: 'Invalid username or password' });
+        }
+        //need to add this function
+        //performLogin(cookies, username);
+  
+        //redirect to home page
+        throw redirect(303, '/');
+      });
     } else {
+      //if someone logs in without a username or password
       return fail(400, { errorMessage: 'Missing username or password' });
     }
   },

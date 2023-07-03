@@ -8,17 +8,21 @@ export async function createUser(
   password: string
 ): Promise<void> {
   // 'sql' can be renamed, values can also be modified to meet your database needs and ensure query parity.
-  await db.connectToDB().then((res) => console.log('connected'));
+  await db.connectToDB().then((res) => {
+    if (res) console.log('connected');
+  });
 
-  const sql = `
-    insert into users (username, password)
-    values ($username, $hashpassword)
-    `;
   //adjust workFactor value to your needs, should we use a type alias here?
   const workFactor = 10;
   const hashPassword = await bcrypt.hash(password, workFactor);
 
-  //db.query(sql)
+  const sql = `
+    insert into users (username, password)
+    values ('${username}', '${hashPassword}')
+    `;
+
+  const result = await db.query(sql);
+  console.log(result);
   //stmnt.run({ username, hashpassword: hashPassword });
   // console.log('Successfully created user!')
 }
@@ -30,24 +34,67 @@ export async function checkUserCredentials(
   password: string
 ): Promise<any> {
   const queryString = `
-    select password
+    select username, password
       from users
-     where username = $username
+      where username = '${username}'
     `;
-  db.query(queryString).then((data) => {
-    //Send username to frontend
-    console.log('Data.rows from db.query on log in', data);
-    if (data.rows[0]) {
-      return bcrypt.compare(password, data.rows[0].password);
+  const result = await db.query(queryString);
+
+  //Send username to frontend
+  // console.log('result is', result);
+  const workFactor = 10;
+  if (result) {
+    // console.log('result row', result.rows[0]);
+    if (result.rows[0]) {
+      console.log('username exists, now we compare password');
+      return bcrypt
+        .compare(password, result.rows[0].password)
+        .then((res) => {
+          return res; // return true
+        })
+        .catch((err) => {
+          console.log(err.message);
+          return err.message;
+        });
     } else {
       //this means the username doesn't exist in the db but dont tell the client that
       // spend some time to "waste" some time
       // this makes brute forcing harder
-      // could also do a timeout here
-      //adjust workFactor value to your needs
-      const workFactor = 10;
+      console.log('username does not exist');
       bcrypt.hash(password, workFactor);
       return false;
     }
-  });
+    return result;
+  } else {
+    return `result is err ${result}`;
+  }
 }
+
+// const response = await db.query(queryString, [], (err: Error, result: object) => {
+//   //Send username to frontend
+//   console.log('result is', result);
+//   const workFactor = 10;
+//   if (!err) {
+//     console.log('got query result')
+//     if (result.rows[0]) {
+//       console.log('username exists, now we compare password')
+//       bcrypt.compare(password, result.rows[0].password)
+//       .then(res => {
+//         return res // return true
+//       })
+//       .catch(err => {
+//         console.log(err.message)
+//         return err.message
+//       })
+//     } else {
+//       //this means the username doesn't exist in the db but dont tell the client that
+//       // spend some time to "waste" some time
+//       // this makes brute forcing harder
+//       console.log('username does not exist')
+//       bcrypt.hash(password, workFactor);
+//       return false;
+//     }
+//   } else {
+//     console.log(err)
+//   }
+// })
