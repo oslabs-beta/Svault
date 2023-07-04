@@ -21,9 +21,18 @@ import {
     };
   */
 
+ /* 
+ table also available in excalidraw
+ sessions SQL table:
+    ses_id: varchar NOT NULL PK,
+    ses_created: timestamp without timezone NOT NULL DEFAULT now(),
+    ses_expires: integer NOT NULL,
+    ses_data: varchar NOT NULL
+  */
 
 type Sid = string;
 
+//in memory session Store
 const sessionStore = new Map<Sid, SessionInfoCache>();
 let nextClean = Date.now() + 1000 * 60 * 60; // 1 hour
 
@@ -78,6 +87,7 @@ if (Date.now() > nextClean) {
   }, 5000);
 }
 
+//gets session from sessionStore, if not in store, adds to it
 export function getSession(sid: Sid): SessionInfo | undefined {
   if (sessionStore.has(sid)) {
     return sessionStore.get(sid);
@@ -95,6 +105,7 @@ export function getSession(sid: Sid): SessionInfo | undefined {
 
 }
 
+//deletes session from sessionStore
 export function deleteSession(sid: string): void {
   sessionStore.delete(sid);
   deleteDbSession(sid);
