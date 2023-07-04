@@ -1,16 +1,30 @@
 //We will use a simple in-memory store to store session information. In a big production app you might want to use a cache like Redis.
 import { randomBytes } from 'node:crypto';
-// import { getUserRoles } from '../db';
+import {
+    deleteDbSession,
+    deleteExpiredDbSessions,
+    getDbSession,
+    //getUserRoles,
+    insertDbSession,
+  } from '../db/index.ts';
+  import type { SessionInfo, SessionInfoCache } from '../db/types.ts';
 
-// roles: string[] --- add in to SessionInfo once you have getUserRoles created
+  /*
+    type aliases for SessionInfo and SessionInfoCache--> 
+    type SessionInfo = {
+      username: string;
+      //roles: string[]; //not being used currently
+    };
+    
+    type SessionInfoCache = SessionInfo & {
+      invalidAt: number;
+    };
+  */
 
-type SessionInfo = {
-  username: string;
-  invalidAt: number;
-};
+
 type Sid = string;
 
-const sessionStore = new Map<Sid, SessionInfo>();
+const sessionStore = new Map<Sid, SessionInfoCache>();
 let nextClean = Date.now() + 1000 * 60 * 60; // 1 hour
 
 function getSid(): Sid {
@@ -26,25 +40,37 @@ function clean() {
       sessionStore.delete(sid);
     }
   }
+  deleteExpiredDbSessions(now);
   nextClean = Date.now() + 1000 * 60 * 60; // 1 hour
 }
 
+//invoked from performLogin on login/+page.server.ts
 export function createSession(username: string, maxAge: number): string {
   let sid: Sid = '';
 
   do {
+    //generates random sid until a unique one is created
     sid = getSid();
   } while (sessionStore.has(sid));
 
+  //can add later, currently we do not have "roles" property
   // const roles = getUserRoles(username)
-  // roles proper add to sessionStore once getUserRoles created
+  // roles property add to sessionStore once getUserRoles created
+
+  const data: SessionInfo = {
+    username
+  };
+  console.log('data is', data) // TODO: want to see what this is returning, just the username?
+  insertDbSession(sid, data, maxAge);
   sessionStore.set(sid, {
-    username,
-    invalidAt: Date.now() + maxAge,
+    ...data,
+    invalidAt: maxAge
   });
   return sid;
 }
 
+//should we move this under the clean() function for easier readability?
+//calls clean() function if it has been over 1 hour to delete expired sessions in db
 if (Date.now() > nextClean) {
   //call in setTimeout to not block the server
   setTimeout(() => {
@@ -53,22 +79,23 @@ if (Date.now() > nextClean) {
 }
 
 export function getSession(sid: Sid): SessionInfo | undefined {
-  const session = sessionStore.get(sid);
-  if (session) {
-    //if a session exists, check if it is valid
-    //if invalid, delete it
-    if (Date.now() > session.invalidAt) {
-      console.log('delete invalid session', sid);
-      sessionStore.delete(sid);
-      return undefined;
-      //if valid, return session
-    } else {
-      console.log(sid);
+  if (sessionStore.has(sid)) {
+    return sessionStore.get(sid);
+  } else {
+    //sends to sessionStore from SessionInfoCache
+    const session = getDbSession(sid);
+    if (session) {
+      sessionStore.set(sid, session);
       return session;
     }
-    //if no session, return undefined
-  } else {
-    console.log('session not found', sid);
-    return undefined;
   }
+  //if no session, return undefined
+  console.log('session not found', sid);
+  return undefined;
+
+}
+
+export function deleteSession(sid: string): void {
+  sessionStore.delete(sid);
+  deleteDbSession(sid);
 }
