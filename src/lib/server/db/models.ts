@@ -22,7 +22,9 @@ export default {
   connectToDB: async () => await db.connect()
 }
 
-//scratch project connection.. maybe we try it this way
+
+
+//scratch project connection.. 
 
 // const pool = new Pool({
 //   connectionString: pg_URI
