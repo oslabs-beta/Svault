@@ -1,6 +1,5 @@
 import { Pool } from 'pg';
-
-const PG_URI = 'postgres://olsxjxwa:z-vPhW0jFxZlp-R0NuyQDf2VDiIyZ1PT@stampy.db.elephantsql.com/olsxjxwa';
+import { PG_URI } from "$env/static/private";
 // create a new pool here using the connection string above
 const pool = new Pool({
   connectionString: PG_URI

@@ -1,4 +1,11 @@
 <script lang ='ts'>
+  // import { GET } from '$lib/server/oauth/githubTest/authorize/+server.js'
+  import { goto } from '$app/navigation';
+
+  function signInWithGithub() {
+    goto('/oauth/github/authorize');
+  }
+  // const test = Oauth();
 //   window.onload = function () {
     // google.accounts.id.initialize({
     //   client_id: '144276105113-kkncvrkkfr59iidohhngjqptkiuip8j8.apps.googleusercontent.com',
@@ -28,6 +35,8 @@
     </form> 
   </div>
 </div>
+<a href="/oauth/github/authorize">Sign in with Github</a>
+<button on:click={signInWithGithub}>sign in with github boi</button>
 
 <style>
 </style>

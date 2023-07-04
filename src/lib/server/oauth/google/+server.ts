@@ -1,9 +1,9 @@
 import { redirect } from "@sveltejs/kit";
 import { OAuth2Client } from "google-auth-library";
-import { CLIENT_ID, CLIENT_SECRET } from "$env/static/private";
+import { GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET } from "$env/static/private";
 
 export const GET = async ({ url }: { url: URL }): Promise<void> => {
-  const redirectURL = 'http://localhost:5173/oauth';
+  const redirectURL = 'http://localhost:5173/google';
   const code = await url.searchParams.get('code');
 
   if (!code) {
@@ -14,8 +14,8 @@ export const GET = async ({ url }: { url: URL }): Promise<void> => {
 
   try {
     const oAuth2Client = new OAuth2Client({
-      clientId: CLIENT_ID,
-      clientSecret: CLIENT_SECRET,
+      clientId: GOOGLE_CLIENT_ID,
+      clientSecret: GOOGLE_CLIENT_SECRET,
       redirectUri: redirectURL
     });
 
@@ -29,5 +29,5 @@ export const GET = async ({ url }: { url: URL }): Promise<void> => {
     console.log("Error logging in with Google", err);
   }
 
-  throw redirect(303, '/');
+  throw redirect(303, '/oauth');
 };

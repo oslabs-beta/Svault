@@ -2,6 +2,7 @@ import { redirect } from "@sveltejs/kit"
 import { OAuth2Client } from "google-auth-library";
 import { GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET} from "$env/static/private";
 
+
 export const actions = {
     OAuth2: async() => {
         console.log('You are in ')
@@ -21,4 +22,3 @@ export const actions = {
         throw redirect(302,authorizeUrl)
     }
 }
-
