@@ -23,6 +23,7 @@ export const actions: Actions = {
     if (username && password) {
       try {
         createUser(username, password);
+        
         // create
       } catch (err) {
         return fail(400, { errorMessage: 'Internal Server Error' });
@@ -58,6 +59,7 @@ export const actions: Actions = {
     } else {
       //need to add this function
       performLogin(cookies, username);
+
       //redirect to home page
       throw redirect(303, '/');
     }
