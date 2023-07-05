@@ -1,5 +1,3 @@
-//dummy login page- to register user and login
-
 <script lang="ts">
     //still need to create this
     import type { ActionData } from './$types.js';
