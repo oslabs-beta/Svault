@@ -1,14 +1,15 @@
 import { checkUserCredentials, createUser } from '$lib/server/db/index.ts';
-import { createSession } from '$lib/server/sessionStore/index.ts';
+//import { createSession } from '$lib/server/sessionStore/index.ts';
 import { fail, redirect, type Actions, type Cookies } from '@sveltejs/kit';
 
+// TODO - Deal with MaxAge equation issues
 //invoked when a username/password is authenticated to TRUE
-function performLogin(cookies: Cookies, username: string) {
-  //default maxAge is 30 days, adjust to your needs
-  const maxAge = Date.now() * 1000 * 60 * 60 * 24 * 30;
-  const sid = createSession(username, maxAge);
-  cookies.set('sid', sid, { maxAge });
-}
+// function performLogin(cookies: Cookies, username: string) {
+//   //default maxAge is 30 days, adjust to your needs
+//   const maxAge = Date.now() * 30;
+//   const sid = createSession(username, maxAge);
+//   cookies.set('sid', sid, { maxAge });
+// }
 
 //now these Actions will be available to the rest of the app
 export const actions: Actions = {
@@ -55,16 +56,16 @@ export const actions: Actions = {
       //should never happen because they are required form data points in page.svelte
       return fail(400, { errorMessage: 'Missing username or password' });
     }
-    
+
     //workaround if username/password do not match
     if (goodUser !== true) {
       return fail(401, { errorMessage: 'Invalid username or password' });
     } else {
       //username and password are correct--> perform login
-      performLogin(cookies, username);
+      //performLogin(cookies, username);
 
-    //redirect to home page
-    throw redirect(303, '/');
+      //redirect to home page
+      throw redirect(303, '/');
     }
   },
 };
