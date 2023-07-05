@@ -2,7 +2,7 @@ import { GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET } from '$env/static/private';
 console.log(GITHUB_CLIENT_ID)
 
 export const GET = async ({ cookies, url }) => {
-    console.log('Hey youre in the validate folder +server.ts file inside the get function');
+    // console.log('Hey youre in the validate folder +server.ts file inside the get function');
     const storedState = cookies.get("github_oauth_state");
     const state = url.searchParams.get("state");
     if (!storedState || !state || storedState !== state) {
@@ -29,7 +29,7 @@ export const GET = async ({ cookies, url }) => {
         }
     });
     if (!response.ok) {
-        console.log('Response was NOT okay');
+        // console.log('Response was NOT okay');
         return new Response(null, {
             status: 400
         });
