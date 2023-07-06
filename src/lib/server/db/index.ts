@@ -1,81 +1,136 @@
-/** need to create import to your database */
+/** need to caddreate import to your database */
 import bcrypt from 'bcrypt';
-const db = require('./models');
+import db from './models.js';
+import type { SessionInfo, SessionInfoCache } from '../db/types.ts';
 
-/** db set up
-//  * const db = new Database <import name>
-  */
-
-// Function to create user. 
+// Function to create user.
 export async function createUser(
-    username: string,
-    password: string
+  username: string,
+  password: string
 ): Promise<void> {
-    // 'sql' can be renamed, values can also be modified to meet your database needs and ensure query parity.
-    //tutorial inserted the unhashed password into the db, but i adjusted the db insertion to only include the hashpassword for safety reasons.. what do you think?
-    const sql = `
+  // 'sql' can be renamed, values can also be modified to meet your database needs and ensure query parity.
+  await db.connectToDB().then((res) => {
+    if (res) console.log('connected');
+  });
+
+  //adjust workFactor value to your needs, should we use a type alias here?
+  const workFactor = 10;
+  const hashPassword = await bcrypt.hash(password, workFactor);
+
+  const sql = `
     insert into users (username, password)
-    values ($username, $hashpassword)
+    values ('${username}', '${hashPassword}')
     `;
-    //adjust workFactor value to your needs, should we use a type alias here?
-    const workFactor = 10;
-    const hashPassword = await bcrypt.hash(password, workFactor);
-    
-    const stmnt = db.query(sql);
-   //stmnt.run({ username, hashpassword: hashPassword });
-    console.log('Successfully created user!')
+
+  const result = await db.query(sql);
+  console.log(result);
 }
 
 //function to check user credentials
-//the excepted return type is a Promise with return of boolean type
+//the accepted return type is a Promise with return of boolean type
 export async function checkUserCredentials(
   username: string,
   password: string
-): Promise<boolean> {
-    const sql = `
-    select password
+): Promise<any> {
+  const queryString = `
+    select username, password
       from users
-     where username = $username
+      where username = '${username}'
     `;
-    const stmnt = db.prepare(sql);
-    //can we use object destructing here intead?
-    //ex. const { username } = stmnt;
-    const row = stmnt.get({ username });
-    if (row) {
-      return bcrypt.compare(password, row.password);
+  const result = await db.query(queryString);
+
+  //Send username to frontend
+  // console.log('result is', result);
+  const workFactor = 10;
+  if (result) {
+    // console.log('result row', result.rows[0]);
+    if (result.rows[0]) {
+      console.log('username exists, now we compare password');
+      return bcrypt
+        .compare(password, result.rows[0].password)
+        .then((res) => {
+          return res; // return true
+        })
+        .catch((err) => {
+          console.log(err.message);
+          return err.message;
+        });
     } else {
+      //this means the username doesn't exist in the db but dont tell the client that
       // spend some time to "waste" some time
       // this makes brute forcing harder
-      // could also do a timeout here
-      //adjust workFactor value to your needs
-      const workFactor = 10;
+      console.log('username does not exist');
       await bcrypt.hash(password, workFactor);
       return false;
     }
+  } else {
+    return `result is err ${result}`;
+  }
 }
 
+//function to delete expired sessions, called from function clean()
 
+//TODO: HAVE NOT TESTED YET
+// export function deleteExpiredDbSessions(now: number) {
+//   //ses_expires is an INTEGER
+//   const sql = `
+//   delete from sessions
+//    where ses_expires < ${now}
+//   `;
 
+//   const result = db.query(sql);
+//   console.log(result);
+// }
 
+// //invoked from createSession in sessionStore/index.ts
+// //with the following arguments: insertDbSession(sid, data: SessionInfo { username: 'string'}, maxAge)
+// export function insertDbSession(
+//   sid: string,
+//   sessionInfo: SessionInfo,
+//   expiresAt: number
+// ) {
+//   const seshInfo = JSON.stringify(sessionInfo);
+//   console.log(seshInfo);
+//   const sql = `
+//     insert into sessions (ses_id, ses_expires, ses_data)
+//     values ('${sid}', ${expiresAt}, '${seshInfo}')
+//   `;
 
+//   console.log('hitting insertDBSession');
+//   const result = db.query(sql);
+//   console.log(result);
+// }
 
+// export function deleteDbSession(sid: string) {
+//   const sql = `
+//     delete from sessions
+//     where ses_id = ${sid}
+//   `;
+//   const result = db.query(sql);
+//   console.log(result);
+// }
 
-
-
-// const username = name;
-// bcrypt
-// .hash(password, workFactor)
-// .then(hash => {
-//     console.log('line 13', hash)
-//     const query = `UPDATE users 
-//     SET hashedpassword = '${hash}' 
-//     WHERE username = '${username}';`
-//     db.query(query)
-//       return next();
-//     })
-//     .catch((err) => {
-//       return next({
-//         log: `Error in userController.create:', ${err}`,
-//         message: { err: 'Error occured in userController.create' }
-//       })
-//     })
+// //get DB session and store in sessionInfoCache
+// export function getDbSession(sid: string): SessionInfoCache | undefined {
+//   const sql = `
+//     select ses_data as data
+//          , ses_expires as expires
+//       from sessions
+//      where ses_id = ${sid}
+//   `;
+//   console.log('hitting getDBsession');
+//   //returns a row with ses_data as data, ses_expires as expires
+//   const result = db.query(sql);
+//   //not sure if we need to make this an async await..
+//   if (result) {
+//     console.log('getDBsession result is', result);
+//     if (result.row[0]) {
+//       const data = JSON.parse(row[0].data);
+//       data.expires = row[0].expires;
+//       return data as SessionInfoCache;
+//     } else {
+//       return undefined;
+//     }
+//   }
+//   return undefined;
+// }
