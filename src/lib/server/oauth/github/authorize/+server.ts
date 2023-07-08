@@ -1,6 +1,9 @@
 import { dev } from '$app/environment';
+//maybe a problem revisit
 import { nanoid } from 'nanoid';
 import { GITHUB_CLIENT_ID } from '$env/static/private';
+
+
 
     export const GET = async ({ cookies }) => {
         // console.log('This is the cookie you are looking for ', cookies.set);
@@ -26,4 +29,4 @@ import { GITHUB_CLIENT_ID } from '$env/static/private';
                 Location: authorizationUrl
             }
         });
-}
+    }

@@ -26,9 +26,9 @@
     <h2>Login</h2>
   </div>
 </div>
-<a href="/oauth/google/authorize">Sign in with Google</a>
+<!-- <a href="/oauth/google/authorize">Sign in with Google</a> -->
 <a href="/oauth/github/authorize">Sign in with Github</a>
-<button on:click={handleClick}>sign in with github boi</button>
+<!-- <button on:click={handleClick}>sign in with github boi</button> -->
 
 <style>
 </style>

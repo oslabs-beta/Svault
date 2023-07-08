@@ -1,7 +1,8 @@
 import { dev } from '$app/environment';
 import { nanoid } from 'nanoid';
-import { GITHUB_CLIENT_ID } from '$env/static/private';
 
+    //convert this get method into something that is not dependent on +server.ts
+    //parameters possible are cookies method, client id, and max age optional
     export const GET = async ({ cookies }) => {
         // console.log('This is the cookie you are looking for ', cookies.set);
         // console.log('GET function in auth/server.ts has been run');
@@ -13,7 +14,7 @@ import { GITHUB_CLIENT_ID } from '$env/static/private';
             path: "/"
         });
         const authorizationUrlSearchParams = await new URLSearchParams({
-            client_id: GITHUB_CLIENT_ID,
+            client_id: 'Iv1.6735dfbc776f34b5',
             state
             // params: { scope: "read:user user:email" },
         });
@@ -27,3 +28,7 @@ import { GITHUB_CLIENT_ID } from '$env/static/private';
             }
         });
 }
+
+// import { getGitHubIdentity } from './github.ts'
+
+// const GET = getGitHubIdentity;

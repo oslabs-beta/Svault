@@ -1,14 +1,18 @@
 <script lang ='ts'>
-  import { github } from './github/authorize/github.js'
-  import { goto } from '$app/navigation';
+  import { getGitHubIdentity } from './github/authorize/github.ts'
   import { getContext } from 'svelte';
+  import { goto } from '$app/navigation';
   const context = getContext('$app');
- 
+
+ const getGit = getGitHubIdentity('Iv1.6735dfbc776f34b5');
   const handleClick = async () => {
     try {
-      const response = await github({ context });
-      console.log(response)
+  //     const response = await github({ context });
+      const response = await getGitHubIdentity('Iv1.6735dfbc776f34b5')
+      console.log('response in page.svelte:', response)
+      console.log('hi')
       goto(response.headers.Location);
+      
     } catch (error) {
       console.error(error);
     }
@@ -27,9 +31,9 @@
   </div>
 </div>
 <a href="/oauth/google/authorize">Sign in with Google</a>
-<a href="/oauth/github/authorize">Sign in with Github</a>
-<button on:click={handleClick}>sign in with github boi</button>
+<a href="/oauth/api">Github Link</a>
+<!-- <button on:click={() => getGitHubIdentity('Iv1.6735dfbc776f34b5')}>Github Button</button> -->
+<button on:click={handleClick}>Github Button</button>
 
 <style>
 </style>
-
