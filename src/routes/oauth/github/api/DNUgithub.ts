@@ -1,15 +1,29 @@
-import { redirect } from '@sveltejs/kit';
+import { Cookies } from '@sveltejs/kit';
 import { nanoid } from 'nanoid';
+import { RequestEvent } from '@sveltejs/kit';
 
+//TODO can i use native svelte methods like cookie and it still be successfully packaged?
 export async function getGitHubIdentity(client_id: string, cookieSetter?: any, maxAge?: number,): Promise<any> {
   const state = nanoid();
-  const cookieHeader = `github_oauth_state=${state}; HttpOnly; Max-Age=3600; Path=/`;
 
+  //Cookie non native method
+  // const cookieHeader = `github_oauth_state=${state}; HttpOnly; Max-Age=3600; Path=/`;
+
+  //Cookie native method
+  Cookies.set("test_github_oauth_state", state, {
+    httpOnly: true,
+    secure: !dev, // disable when using localhost
+    maxAge: 60 * 60, // 1 hour expiry,
+    path: "/"
+  });
+
+  //Possible config for Cookie
   // cookieSetter("github_oauth_state", state, {
   //   httpOnly: true,
   //   maxAge: maxAge ? maxAge : 60 * 60, // 1 hour expiry
   //   path: "/"
   // });
+
   const authorizationUrlSearchParams = await new URLSearchParams({
     client_id: client_id,
     state,
@@ -29,8 +43,7 @@ export async function getGitHubIdentity(client_id: string, cookieSetter?: any, m
   // };
 }
 export async function getGitHubValidation(client_id: string, client_secret: string, storedState: string, state: string, code: string) {
-  // const url = window.location.href;
-  // console.log('url', url)
+  console.log('in validate')
   // const storedState = cookies.get("github_oauth_state");
   // const state = url.searchParams.get("state");
   if (!storedState || !state || storedState !== state) {
