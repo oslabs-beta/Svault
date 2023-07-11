@@ -1,7 +1,7 @@
 /** need to caddreate import to your database */
 import bcrypt from 'bcrypt';
 import db from './models.js';
-import type { SessionInfo, SessionInfoCache } from '../db/types.ts';
+import type { SessionInfo, SessionInfoCache } from './types.ts';
 
 // Function to create user.
 export async function createUser(

@@ -54,13 +54,13 @@
 // }
 
 // //invoked from performLogin on login/+page.server.ts
-// export function createSession(username: string, maxAge: number): string {
-//   let sid: Sid = '';
+export function createSession(username: string, maxAge: number): string {
+  let sid: Sid = '';
 
-//   do {
-//     //generates random sid until a unique one is created
-//     sid = getSid();
-//   } while (sessionStore.has(sid));
+  do {
+    //generates random sid until a unique one is created
+    sid = getSid();
+  } while (sessionStore.has(sid));
 
 //   //can add later, currently we do not have "roles" property
 //   // const roles = getUserRoles(username)
@@ -109,4 +109,4 @@
 // export function deleteSession(sid: string): void {
 //   sessionStore.delete(sid);
 //   deleteDbSession(sid);
-// }
+}
