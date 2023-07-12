@@ -1,4 +1,6 @@
 // import type { Cookies } from '@sveltejs/kit';
+
+
 import { nanoid } from 'nanoid';
 // import { RequestEvent } from '@sveltejs/kit';
 
@@ -42,16 +44,16 @@ export async function getGitHubIdentity(client_id: string, cookieSetter?: any, m
   //   }
   // };
 }
-export async function getGitHubValidation(client_id: string, client_secret: string, storedState: string, state: string, code: string) {
-  console.log('in validate')
-  // const storedState = cookies.get("github_oauth_state");
-  // const state = url.searchParams.get("state");
+export async function getGitHubValidation(client_id: string, client_secret: string, event) {
+  const storedState = event.cookies.get("github_oauth_state");
+  const state = event.url.searchParams.get("state");
+
   if (!storedState || !state || storedState !== state) {
     return new Response(null, {
       status: 400
     });
   }
-  // const code = url.searchParams.get("code");
+  const code = event.url.searchParams.get("code");
   if (!code) {
     return new Response(null, {
       status: 400
@@ -77,7 +79,7 @@ export async function getGitHubValidation(client_id: string, client_secret: stri
   }
   const result = await response.json() as { access_token: string }
   const accessToken = result.access_token
-  // console.log('Token:', result);
+
   // do stuff with access token
   // return some response
 
