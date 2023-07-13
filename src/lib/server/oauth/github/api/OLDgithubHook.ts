@@ -1,4 +1,4 @@
-import { getGitHubIdentity, getGitHubValidation } from '$lib/server/oauth/github/api/github.js';
+import { getGitHubIdentity, getGitHubValidation } from '$lib/server/oauth/github/api/OLDgithub.ts';
 
 export const gitHub = (clientId, clientSecret, path) => {
     return async ({ event, resolve }) => {
