@@ -81,9 +81,6 @@ import { fail, redirect, type Actions, type Cookies } from '@sveltejs/kit';
 // };
 //----------ORIGINAL END------------
 
-
-
-
 export const register = async (event) => {
   // obtains form data when user clicks "register" button
   const data = await event.request.formData();
