@@ -23,10 +23,9 @@ export async function getGitHubIdentity(client_id: string, cookieSetter?: any, m
   const authorizationUrlSearchParams = await new URLSearchParams({
     client_id: client_id,
     state,
-    // params: { scope: "read:user user:email" },
+    params: { scope: "read:user user:email" },
   });
   const authorizationUrl = `https://github.com/login/oauth/authorize?${authorizationUrlSearchParams}`;
-
   const headers = new Headers();
   headers.append('Set-Cookie', cookieHeader);
   headers.append('Location', authorizationUrl);
@@ -65,7 +64,9 @@ export async function getGitHubValidation(client_id: string, client_secret: stri
       status: 400
     });
   }
+  // console.log('val response', response)
   const result = await response.json() as { access_token: string }
+  // console.log('val result',result)
   const accessToken = result.access_token
 
   // do stuff with access token
