@@ -21,7 +21,7 @@ import { fail } from '@sveltejs/kit';
 // //   }
 
 //Hook master
-
+//TODO setup login after registering
 export const SvaultNative = (redirect) => {
     return async ({ event, resolve }) => {
         if (event.url.pathname === '/loginValidate') {
@@ -34,9 +34,18 @@ export const SvaultNative = (redirect) => {
         }
         if (event.url.pathname === "/registerValidate") {
             const newUser = await register(event);
-            console.log(newUser)
+            // console.log(newUser)
             if (newUser.status === 200) {
-                console.log('status good redirect')
+                // console.log('status good now login')
+                // console.log('event', event)
+                // const isUser = await login(event);
+                // console.log('isUser', isUser)
+                // if (isUser === true) {
+                //     console.log('Inside register, if statement for login')
+                //     return new Response('Redirect', { status: 303, headers: { Location: redirect } });
+                // } else {
+                //     return new Response('error in login validation')
+                // }
                 return new Response('Redirect', { status: 303, headers: { Location: redirect } })
             } else {
                 return new Response('error in register validation')
@@ -64,7 +73,6 @@ export const register = async (event) => {
     const username = data.get('username')?.toString();
     const password = data.get('password')?.toString();
     console.log(username, password);
-
     if (username && password) {
         try {
             await createUser(username, password);
