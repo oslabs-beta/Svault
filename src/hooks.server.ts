@@ -48,8 +48,8 @@ import { SvaultNative } from "$lib/server/login/nativeAuth.ts";
 
 //
 
-// const redirect = '/secret'
-
+const redirect = '/secret'
+export const SvaultNative(redirect)
 
 
 // export const handle = (async ({ event, resolve }) => {
