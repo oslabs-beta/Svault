@@ -2,7 +2,7 @@
 // import { getSession } from './lib/server/sessionStore/index.ts';
 import { register, login } from "$lib/server/login/login.ts"
 import type { Handle, Actions } from '@sveltejs/kit';
-
+// import { redirect } from '@sveltejs/kit';
 
 // import type { form } from '$routes/login/'
 
@@ -12,7 +12,7 @@ import type { Handle, Actions } from '@sveltejs/kit';
 
 //   // if (event.url.pathname === '/register') {
 //   //   // //const formData = 
-    
+
 //   // }
 //   if (event.url.pathname === '/login') {
 //     console.log('hook login')
@@ -26,7 +26,7 @@ import type { Handle, Actions } from '@sveltejs/kit';
 //         console.log(username, password)
 //     // console.log(values)
 //   }
-  
+
 //   //grab the session ID from the cookie, and get the session data for it
 //   const {cookies} = event;
 //   const sid = cookies.get('sid');
@@ -45,24 +45,25 @@ import type { Handle, Actions } from '@sveltejs/kit';
 //   return response;
 // }) satisfies Handle;
 
-export const handle = async ({ event, resolve }) => {
+export const handle = (async ({ event, resolve }) => {
 
-  if (event.url.pathname === '/test') {
-      // console.log('req body', event.request.body)
-      console.log('event object is', event)
-      const data = await event.request.formData();
-      const username = data.get('username')?.toString();
-      const password = data.get('password')?.toString();
-      console.log("username is:", username, "password is:", password)
-      const isUser = await login(username, password);
-      console.log(isUser);
-      if(isUser === true){
-        return new Response("svelte sucks" )
-      }else{
-        return new Response('error in hooks')
-      }
+  if (event.url.pathname === '/loginValidate') {
+    const isUser = await login(event);
+    if (isUser === true) {
+      return new Response('Redirect', { status: 303, headers: { Location: '/secret' } });
+    } else {
+      return new Response('error in login validation')
+    }
   }
-
-  // //end the hook
+  if(event.url.pathname === "/registerValidate"){
+    const newUser = await register(event);
+    console.log(newUser)
+    if(newUser.status === 200){
+      console.log('status good redirect')
+      return new Response('Redirect', { status: 303, headers: { Location: '/secret' } })
+    }else{
+      return new Response('error in register validation')
+    }
+  }
   return await resolve(event);
-};
+}) satisfies Handle;

@@ -21,9 +21,10 @@ export async function createUser(
     insert into users (username, password)
     values ('${username}', '${hashPassword}')
     `;
-
+  
   const result = await db.query(sql);
-  console.log(result);
+  // return;
+  console.log('result in createUser',result);
 }
 
 //function to check user credentials
