@@ -1,5 +1,13 @@
 <script lang="ts">
     import type { LayoutServerData } from './$types';
+    //import { setBrowserSession } from '$lib/server/sessionStore/index.ts';
+    import { onMount } from 'svelte';
+
+    // onMount(() => {
+    //   setBrowserSession('string1', 'string2')
+    // })
+ 
+
     export let data: LayoutServerData;
 </script>
       

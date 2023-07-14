@@ -5,22 +5,25 @@ import { checkUserCredentials, createUser } from '$lib/server/db/index.ts';
 import { createSession, getSession } from '$lib/server/sessionStore/index.ts';
 import { fail, redirect } from '@sveltejs/kit';
 
-//TODO cookie functionality
-  //grab the session ID from the cookie, and get the session data for it
-//   const {cookies} = event;
-//   const sid = cookies.get('sid');
-//   if (sid) {
-//       const session = getSession(sid);
-//       if (session) {
-//           event.locals.username = session.username;
-//           // event.locals.roles = session.roles;
-//       } else {
-//           // remove invalid/expired/unknown cookies
-//           cookies.delete('sid');
-//       }
-//   }
+/*
+    //TODO cookie functionality
+        //grab the session ID from the cookie, and get the session data for it
+    //   const {cookies} = event;
+    //   const sid = cookies.get('sid');
+    //   if (sid) {
+    //       const session = getSession(sid);
+    //       if (session) {
+    //           event.locals.username = session.username;
+    //           // event.locals.roles = session.roles;
+    //       } else {
+    //           // remove invalid/expired/unknown cookies
+    //           cookies.delete('sid');
+    //       }
+    //   }
+*/
 
 //Hook master
+/*
 //TODO setup login after registering
 export const SvaultNative = (redirect) => {
     return async ({ event, resolve }) => {
@@ -29,7 +32,7 @@ export const SvaultNative = (redirect) => {
             const { goodUser, header } = await login(event, redirect);
             // console.log('goodUser is:', goodUser);
             console.log(`header is: ${header}`);
-            console.log('event locals is', event.locals)
+            console.log('event locals is', event.locals);
             //return new Response('Redirect', { status: 303, headers: header});
   
             if (goodUser === true) {

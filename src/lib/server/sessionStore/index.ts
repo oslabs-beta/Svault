@@ -1,18 +1,11 @@
-// We will use a simple in-memory store to store session information. In a big production app you might want to use a cache like Redis.
-import { randomBytes } from 'node:crypto';
-import { onMount } from 'svelte';
-import { writable } from 'svelte/store';
-//import { sessionStorage }
-import {
-    deleteDbSession,
-    deleteExpiredDbSessions,
-    getDbSession,
-    //getUserRoles,
-    insertDbSession,
-  } from '../db/index.ts';
-  import type { SessionInfo, SessionInfoCache } from '../db/types.ts';
+// // We will use a simple in-memory store to store session information. In a big production app you might want to use a cache like Redis.
 
-  
+// // TODO/ITERATION: send session information back to frontend via sessionStorage and localStorage objects
+
+import { randomBytes } from 'node:crypto';
+import type { SessionInfo, SessionInfoCache } from '../db/types.ts';
+
+/*
     // type aliases for SessionInfo and SessionInfoCache--> 
     // type SessionInfo = {
     //   username: string;
@@ -22,15 +15,7 @@ import {
     // type SessionInfoCache = SessionInfo & {
     //   invalidAt: number;
     // };
-  
- 
-//  table also available in excalidraw
-//  sessions SQL table:
-//     ses_id: varchar NOT NULL PK,
-//     ses_created: timestamp without timezone NOT NULL DEFAULT now(),
-//     ses_expires: integer NOT NULL,
-//     ses_data: varchar NOT NULL
-  
+*/
 
 type Sid = string;
 
@@ -51,11 +36,11 @@ function clean() {
       sessionStore.delete(sid);
     }
   }
-  //deleteExpiredDbSessions(now);
+  // // TODO: delete session from browser storage
   nextClean = Date.now() + 1000 * 60 * 60; // 1 hour
 }
 
-//calls clean() function if it has been over 1 hour to delete expired sessions in db
+//calls clean() function if it has been over 1 hour to delete expired sessions
 if (Date.now() > nextClean) {
   //call in setTimeout to not block the server
   setTimeout(() => {
@@ -72,9 +57,9 @@ export function createSession(username: string, maxAge: number): string {
     sid = getSid();
   } while (sessionStore.has(sid));
 
-  // POSSIBLE ITERATION-currently we do not have "roles" property
-    // const roles = getUserRoles(username)
-    // roles property add to sessionStore once getUserRoles created
+  // //POSSIBLE ITERATION-currently we do not have "roles" property
+  //  // const roles = getUserRoles(username)
+  //  // roles property add to sessionStore once getUserRoles created
 
   const data: SessionInfo = {
     username
@@ -95,15 +80,14 @@ export function getSession(sid: Sid): SessionInfo | undefined {
   if (sessionStore.has(sid)) {
     return sessionStore.get(sid);
   } else {
-    //if session present on browser
-    // sessionStorage.getItem()
-    //sends to sessionStore from SessionInfoCache
-    //const session = getDbSession(sid);
-    // if (session) {
-    //   sessionStore.set(sid, session);
-    //   console.log('Tada, session', session)
-    //   return session;
-    // }
+    /* 
+      // TODO: get session from browser on frontend and store in session store
+      // const session = sessionStorage.getItem(username)
+      // if (session) {
+      //   sessionStore.set(sid, session);
+      //   return session;
+      // }
+    */
   }
   //if no session, return undefined
   console.log('session not found', sid);
@@ -113,12 +97,17 @@ export function getSession(sid: Sid): SessionInfo | undefined {
 //deletes session from sessionStore
 export function deleteSession(sid: string): void {
   sessionStore.delete(sid);
-  //deleteDbSession(sid);
+  /*
+    // // TODO: remove session from browser storage
+    // // sessionStorage.removeItem(username);
+    // // localStorage.removeItem(username);
+  */
 }
 
-// export function setBrowserSession(sid: string, username: string) {
-//   onMount(() => {
-//     sessionStorage.setItem('test1', 'Developer');
-//     localStorage.setItem('test2', 'local');
-//     });
-// }
+/*
+  // TODO: send back to frontend to store in browser
+  // export function setBrowserSession(sid: string, username: string) {
+  //   sessionStorage.setItem(username, sid);
+  //   localStorage.setItem(username, sid);
+  // }
+*/
