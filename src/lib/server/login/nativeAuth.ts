@@ -2,7 +2,7 @@
 
 import type { Handle, Cookies } from '@sveltejs/kit';
 import { checkUserCredentials, createUser } from '$lib/server/db/index.ts';
-import { createSession } from '$lib/server/sessionStore/index.ts';
+import { createSession, getSession } from '$lib/server/sessionStore/index.ts';
 import { fail, redirect } from '@sveltejs/kit';
 
 //TODO cookie functionality
@@ -29,6 +29,7 @@ export const SvaultNative = (redirect) => {
             const { goodUser, header } = await login(event, redirect);
             // console.log('goodUser is:', goodUser);
             console.log(`header is: ${header}`);
+            console.log('event locals is', event.locals)
             //return new Response('Redirect', { status: 303, headers: header});
   
             if (goodUser === true) {
@@ -63,19 +64,17 @@ export const SvaultNative = (redirect) => {
 
 
 //invoked when a username/password is authenticated to TRUE
-export function makeCookieAndSession(cookies: Cookies, username: string, redirect) {
-  // TODO - have the user have control over the session expiration time
-  const maxAge = Date.now() + 1000 * 60 * 60;
-  const sid = createSession(username, maxAge);
-  console.log('cookies in makeCookieAndSession:', cookies)
-  //return sid;
-
-  const cookieHeader = `native_auth=${sid}; HttpOnly; Max-Age=${maxAge}; Path=/`;
+export function makeCookieAndSession(username: string, redirect) {
+    // TODO - have the user have control over the session expiration time
+    const maxAge = Date.now() + 1000 * 60 * 60;
+    const sid = createSession(username, maxAge);
+    
+    
+  const cookieHeader = `svault_auth=${sid}; HttpOnly; Max-Age=${maxAge}; Path=/`;
   const headers = new Headers();
   headers.append('Set-Cookie', cookieHeader);
   headers.append('Location', redirect);
   return headers;
-//   cookies.set('sid', sid, { maxAge });
 }
 
 //register
@@ -100,7 +99,7 @@ export const register = async (event) => {
 }
 
 //login
-export const login = async (event, redirect, cookies?) => {
+export const login = async (event, redirect) => {
     //obtains form data when user clicks "login" button
     const data = await event.request.formData();
     const username = data.get('username')?.toString();
@@ -138,8 +137,8 @@ export const login = async (event, redirect, cookies?) => {
         //     },
         // );
         // event.cookies.set('sid', '523rtw43ttt', 1234565432);
-        const header = makeCookieAndSession(cookies, username, redirect);
-        // console.log(header)
+        const header = makeCookieAndSession(username, redirect);
+        //console.log(header)
         // removed goodUser from return statement (1)
         return { goodUser, header };
     }

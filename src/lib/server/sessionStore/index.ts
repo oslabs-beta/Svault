@@ -1,5 +1,8 @@
 // We will use a simple in-memory store to store session information. In a big production app you might want to use a cache like Redis.
 import { randomBytes } from 'node:crypto';
+import { onMount } from 'svelte';
+import { writable } from 'svelte/store';
+//import { sessionStorage }
 import {
     deleteDbSession,
     deleteExpiredDbSessions,
@@ -69,15 +72,14 @@ export function createSession(username: string, maxAge: number): string {
     sid = getSid();
   } while (sessionStore.has(sid));
 
-  //can add later, currently we do not have "roles" property
-  // const roles = getUserRoles(username)
-  // roles property add to sessionStore once getUserRoles created
+  // POSSIBLE ITERATION-currently we do not have "roles" property
+    // const roles = getUserRoles(username)
+    // roles property add to sessionStore once getUserRoles created
 
   const data: SessionInfo = {
     username
   };
-  //console.log('data is', data) // TODO: want to see what this is returning, just the username?
-  // insertDbSession(sid, data, maxAge);
+
   sessionStore.set(sid, {
     ...data,
     invalidAt: maxAge
@@ -89,21 +91,23 @@ export function createSession(username: string, maxAge: number): string {
 
 //gets session from sessionStore, if not in store, adds to it
 export function getSession(sid: Sid): SessionInfo | undefined {
+  //if session present in sessionStore
   if (sessionStore.has(sid)) {
     return sessionStore.get(sid);
   } else {
+    //if session present on browser
+    // sessionStorage.getItem()
     //sends to sessionStore from SessionInfoCache
     //const session = getDbSession(sid);
-    if (session) {
-      sessionStore.set(sid, session);
-      console.log('Tada, session', session)
-      return session;
-    }
+    // if (session) {
+    //   sessionStore.set(sid, session);
+    //   console.log('Tada, session', session)
+    //   return session;
+    // }
   }
   //if no session, return undefined
   console.log('session not found', sid);
   return undefined;
-
 }
 
 //deletes session from sessionStore
@@ -111,3 +115,10 @@ export function deleteSession(sid: string): void {
   sessionStore.delete(sid);
   //deleteDbSession(sid);
 }
+
+// export function setBrowserSession(sid: string, username: string) {
+//   onMount(() => {
+//     sessionStorage.setItem('test1', 'Developer');
+//     localStorage.setItem('test2', 'local');
+//     });
+// }
