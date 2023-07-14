@@ -13,7 +13,7 @@
 // // }
 
 // //now these Actions will be available to the rest of the app
-//export const actions: Actions = {
+// export const actions: Actions = {
 //   //TODO: do we need to add creation of a cookie here, or should we delete?
 //   register: async ({ request, cookies }) => {
 //     //obtains form data when user clicks "register" button
@@ -68,7 +68,7 @@
 //       return fail(401, { errorMessage: 'Invalid username or password' });
 //     } else {
 //       //username and password are correct--> perform login
-//       //performLogin(cookies, username);
+//       performLogin(cookies, username);
 
 //       //redirect to home page
 //       throw redirect(303, '/');

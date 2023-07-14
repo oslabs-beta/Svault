@@ -72,66 +72,66 @@ export async function checkUserCredentials(
 //function to delete expired sessions, called from function clean()
 
 //TODO: HAVE NOT TESTED YET
-// export function deleteExpiredDbSessions(now: number) {
-//   //ses_expires is an INTEGER
-//   const sql = `
-//   delete from sessions
-//    where ses_expires < ${now}
-//   `;
+export function deleteExpiredDbSessions(now: number) {
+  //ses_expires is an INTEGER
+  const sql = `
+  delete from sessions
+   where ses_expires < ${now}
+  `;
 
-//   const result = db.query(sql);
-//   console.log(result);
-// }
+  const result = db.query(sql);
+  console.log(result);
+}
 
-// //invoked from createSession in sessionStore/index.ts
-// //with the following arguments: insertDbSession(sid, data: SessionInfo { username: 'string'}, maxAge)
-// export function insertDbSession(
-//   sid: string,
-//   sessionInfo: SessionInfo,
-//   expiresAt: number
-// ) {
-//   const seshInfo = JSON.stringify(sessionInfo);
-//   console.log(seshInfo);
-//   const sql = `
-//     insert into sessions (ses_id, ses_expires, ses_data)
-//     values ('${sid}', ${expiresAt}, '${seshInfo}')
-//   `;
+//invoked from createSession in sessionStore/index.ts
+//with the following arguments: insertDbSession(sid, data: SessionInfo { username: 'string'}, maxAge)
+export function insertDbSession(
+  sid: string,
+  sessionInfo: SessionInfo,
+  expiresAt: number
+) {
+  const seshInfo = JSON.stringify(sessionInfo);
+  console.log(seshInfo);
+  const sql = `
+    insert into sessions (ses_id, ses_expires, ses_data)
+    values ('${sid}', ${expiresAt}, '${seshInfo}')
+  `;
 
-//   console.log('hitting insertDBSession');
-//   const result = db.query(sql);
-//   console.log(result);
-// }
+  console.log('hitting insertDBSession');
+  const result = db.query(sql);
+  console.log(result);
+}
 
-// export function deleteDbSession(sid: string) {
-//   const sql = `
-//     delete from sessions
-//     where ses_id = ${sid}
-//   `;
-//   const result = db.query(sql);
-//   console.log(result);
-// }
+export function deleteDbSession(sid: string) {
+  const sql = `
+    delete from sessions
+    where ses_id = ${sid}
+  `;
+  const result = db.query(sql);
+  console.log(result);
+}
 
-// //get DB session and store in sessionInfoCache
-// export function getDbSession(sid: string): SessionInfoCache | undefined {
-//   const sql = `
-//     select ses_data as data
-//          , ses_expires as expires
-//       from sessions
-//      where ses_id = ${sid}
-//   `;
-//   console.log('hitting getDBsession');
-//   //returns a row with ses_data as data, ses_expires as expires
-//   const result = db.query(sql);
-//   //not sure if we need to make this an async await..
-//   if (result) {
-//     console.log('getDBsession result is', result);
-//     if (result.row[0]) {
-//       const data = JSON.parse(row[0].data);
-//       data.expires = row[0].expires;
-//       return data as SessionInfoCache;
-//     } else {
-//       return undefined;
-//     }
-//   }
-//   return undefined;
-// }
+//get DB session and store in sessionInfoCache
+export function getDbSession(sid: string): SessionInfoCache | undefined {
+  const sql = `
+    select ses_data as data
+         , ses_expires as expires
+      from sessions
+     where ses_id = ${sid}
+  `;
+  console.log('hitting getDBsession');
+  //returns a row with ses_data as data, ses_expires as expires
+  const result = db.query(sql);
+  //not sure if we need to make this an async await..
+  if (result) {
+    console.log('getDBsession result is', result);
+    if (result.row[0]) {
+      const data = JSON.parse(row[0].data);
+      data.expires = row[0].expires;
+      return data as SessionInfoCache;
+    } else {
+      return undefined;
+    }
+  }
+  return undefined;
+}

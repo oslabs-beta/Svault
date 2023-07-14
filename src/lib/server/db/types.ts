@@ -3,6 +3,6 @@ export type SessionInfo = {
     //roles: string[];
   };
   
-  export type SessionInfoCache = SessionInfo & {
-    invalidAt: number;
-  };
+export type SessionInfoCache = SessionInfo & {
+  invalidAt: number;
+};
