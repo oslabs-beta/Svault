@@ -1,32 +1,8 @@
+<!-- used for development testing -->
+
 <script lang="ts">
-	// import { onMount } from 'svelte';
-	// let form;
-	// onMount(() => {
-	// 	form.addEventListener('submit', function (event) {
-	// 		event.preventDefault();
-	// 		const formData = new FormData(form);
-	// 		fetch('/test', {
-	// 			method: 'POST',
-	// 			body: formData
-	// 		})
-	// 			.then(function (response) {
-	// 				if (response.ok) {
 
-	// 					return response.text();
-	// 				} else {
-	// 					throw new Error('Error: ' + response.status);
-	// 				}
-	// 			})
-
-	// 	});
-	// });
-
-    // //still need to create this
-    // import type { ActionData } from './$types.js';
-
-    // // receive form data from server
-    // export let form: ActionData;
-  </script>
+</script>
 
 <div class="container">
 	<h1 class="is-size-3 has-text-weight-semibold my-4">Login or Register</h1>

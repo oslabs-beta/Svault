@@ -1,11 +1,14 @@
+<!-- used for development testing -->
+
 <script lang="ts">
     import type { LayoutServerData } from './$types';
-    //import { setBrowserSession } from '$lib/server/sessionStore/index.ts';
+    // // import { setBrowserSession } from '$lib/server/sessionStore/index.ts';
     import { onMount } from 'svelte';
 
-    // onMount(() => {
-    //   setBrowserSession('string1', 'string2')
-    // })
+    // // TODO: bring in backend sessions to browser
+      // onMount(() => {
+      //   setBrowserSession(username, sid)
+      // })
  
 
     export let data: LayoutServerData;
@@ -34,7 +37,9 @@
           <a href='/oauth'>OAuth</a>
         {/if}
       </div>
-      <!-- <div class="navbar-end">
+
+    <!-- TODO: LOGOUT FUNCTIONALITY still in routes a.k.a
+      <div class="navbar-end">
         <div class="navbar-item">
           <div class="buttons">
             {#if data?.username}

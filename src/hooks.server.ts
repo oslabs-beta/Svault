@@ -2,7 +2,7 @@
 // import { getSession } from './lib/server/sessionStore/index.ts';
 // import { register, login } from "$lib/server/login/login.ts"
 import { SvaultNative } from "$lib/server/login/nativeAuth.ts";
-import type { Cookies } from '@sveltejs/kit';
+//import type { Cookies } from '@sveltejs/kit';
 const redirect = '/secret'
 export const handle = SvaultNative(redirect)
 

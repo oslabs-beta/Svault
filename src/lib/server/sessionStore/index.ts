@@ -21,7 +21,7 @@ type Sid = string;
 
 //in memory session Store
 const sessionStore = new Map<Sid, SessionInfoCache>();
-let nextClean = Date.now() + 1000 * 60 * 60; // 1 hour
+let nextClean = Date.now() //+ 1000 * 60 * 60; // 1 hour
 
 function getSid(): Sid {
   return randomBytes(32).toString('hex');
@@ -37,7 +37,7 @@ function clean() {
     }
   }
   // // TODO: delete session from browser storage
-  nextClean = Date.now() + 1000 * 60 * 60; // 1 hour
+  nextClean = Date.now() //+ 1000 * 60 * 60; // 1 hour
 }
 
 //calls clean() function if it has been over 1 hour to delete expired sessions
@@ -77,6 +77,7 @@ export function createSession(username: string, maxAge: number): string {
 //gets session from sessionStore, if not in store, adds to it
 export function getSession(sid: Sid): SessionInfo | undefined {
   //if session present in sessionStore
+  console.log(sessionStore)
   if (sessionStore.has(sid)) {
     return sessionStore.get(sid);
   } else {
