@@ -5,6 +5,6 @@ import type { LayoutServerLoad } from '/$types';
 
 export const load = (async ({ locals }) => {
   const { username, session } = locals;
-  console.log(locals)
+  console.log('layout locals is:', locals)
   return { username, session };
 }) satisfies LayoutServerLoad;

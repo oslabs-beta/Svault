@@ -4,7 +4,7 @@ import { type Handle } from '@sveltejs/kit';
 import { checkUserCredentials, createUser } from '$lib/server/db/index.js';
 import { createSession, getSession, deleteSession } from '$lib/server/sessionStore/index.js';
 import { fail } from '@sveltejs/kit';
-import { MAX_AGE } from '$env/static/private'
+import { MAX_AGE } from '$env/static/private';
 
 
 //Hook master
