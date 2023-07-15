@@ -1,8 +1,8 @@
 //master for all native login/register functions
 
 import type { Handle, Cookies } from '@sveltejs/kit';
-import { checkUserCredentials, createUser } from '$lib/server/db/index.ts';
-import { createSession, getSession, deleteSession } from '$lib/server/sessionStore/index.ts';
+import { checkUserCredentials, createUser } from '$lib/server/db/index.js';
+import { createSession, getSession, deleteSession } from '$lib/server/sessionStore/index.js';
 import { fail, redirect } from '@sveltejs/kit';
 
 
