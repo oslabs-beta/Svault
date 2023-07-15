@@ -25,17 +25,17 @@
         </div>
       </div>
       <div>
-        {#if data?.username}
+        <!-- >{#if data?.username} -->
           <a
             href="/logout"
             class="button is-primary"
             data-sveltekit-preload-data="off"
             data-sveltekit-reload>Hello {data.username}, Log out</a
           >
-        {:else}
+        <!-- {:else} -->
           <a href="/login" class="button is-primary">Log in</a>
           <a href='/oauth'>OAuth</a>
-        {/if}
+        <!-- {/if} -->
       </div>
 
       <div class="navbar-end">

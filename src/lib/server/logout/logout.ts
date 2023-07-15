@@ -6,7 +6,7 @@ import type { Handle, Cookies } from '@sveltejs/kit';
 
 
 
-export const SvaultLogout = (redirect) => {
+export const handle = (redirect) => {
     return async ({ event, resolve }) => {
         console.log('trying to log out')
         if (event.url.pathname === ('/logout')) {
@@ -21,8 +21,8 @@ export const SvaultLogout = (redirect) => {
         }
 
         //   satisfies PageServerLoad;
-
-    }
+        return await resolve()
+    }   
 }
 
 

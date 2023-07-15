@@ -2,25 +2,9 @@
 
 import type { Handle, Cookies } from '@sveltejs/kit';
 import { checkUserCredentials, createUser } from '$lib/server/db/index.ts';
-import { createSession, getSession } from '$lib/server/sessionStore/index.ts';
+import { createSession, getSession, deleteSession } from '$lib/server/sessionStore/index.ts';
 import { fail, redirect } from '@sveltejs/kit';
 
-/*
-    //TODO cookie functionality
-        //grab the session ID from the cookie, and get the session data for it
-    //   const {cookies} = event;
-    //   const sid = cookies.get('sid');
-    //   if (sid) {
-    //       const session = getSession(sid);
-    //       if (session) {
-    //           event.locals.username = session.username;
-    //           // event.locals.roles = session.roles;
-    //       } else {
-    //           // remove invalid/expired/unknown cookies
-    //           cookies.delete('sid');
-    //       }
-    //   }
-*/
 
 //Hook master
 /*
@@ -38,9 +22,9 @@ export const SvaultNative = (redirect) => {
                 if (session) {
                     //sends username back to frontend to be used on the landing page
                     event.locals.username = session.username;
-                    console.log(event.locals)
                     console.log('Welcome Back!');
-                    return new Response('Welcome back', { status: 303 } )
+                    // throw redirect('/')
+                    // return new Response('Redirect', { status: 303, headers: {Location: '/'} })
                     //TODO/ITERATION: user roles on site 
                     // event.locals.roles = session.roles;
                 } else {
@@ -49,13 +33,13 @@ export const SvaultNative = (redirect) => {
                     cookies.delete('svault_auth');
                     
                 }
-      }
+            }
         }
         if (event.url.pathname === '/loginValidate') {
             const { goodUser, header } = await login(event, redirect);
             // console.log('goodUser is:', goodUser);
-            console.log(`header is: ${header}`);
-            console.log('event locals is', event.locals);
+            //console.log(`header is: ${header}`);
+            //console.log('event locals is', event.locals);
             //return new Response('Redirect', { status: 303, headers: header});
   
             if (goodUser === true) {
@@ -84,6 +68,19 @@ export const SvaultNative = (redirect) => {
             } else {
                 return new Response('error in register validation')
             }
+        }
+        if (event.url.pathname === '/logout') {
+            console.log('you are in logout')
+            const { cookies } = event;
+            const sid = cookies.get('svault_auth');
+            //console.log('sid', sid)
+            if (sid) {
+              console.log('cookie found, now delete it')
+              cookies.delete('svault_auth');
+              deleteSession(sid)
+              // include the cookies.delete for oauth name
+            }
+            return new Response('Redirect', { status: 303, headers: {Location: '/'} })
         }
         return await resolve(event);
     }
