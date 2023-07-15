@@ -9,7 +9,7 @@
       // onMount(() => {
       //   setBrowserSession(username, sid)
       // })
- 
+    
 
     export let data: LayoutServerData;
 </script>
@@ -38,6 +38,11 @@
         {/if}
       </div>
 
+      <div>
+        {#if data.failure} 
+        <p>failed!</p>
+        {/if}
+      </div>
      
     </nav>
   </header>

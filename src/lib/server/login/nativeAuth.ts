@@ -1,9 +1,9 @@
 //master for all native login/register functions
 
-//import type { Handle, Cookies } from '@sveltejs/kit';
+import { type Handle } from '@sveltejs/kit';
 import { checkUserCredentials, createUser } from '$lib/server/db/index.js';
 import { createSession, getSession, deleteSession } from '$lib/server/sessionStore/index.js';
-import { fail, redirect } from '@sveltejs/kit';
+import { fail } from '@sveltejs/kit';
 import { MAX_AGE } from '$env/static/private'
 
 
@@ -11,9 +11,8 @@ import { MAX_AGE } from '$env/static/private'
 /*
     //TODO setup login after registering
 */
-export const SvaultNative = (redirect) => {
+export const SvaultNative = (redirect: string) => {
     return async ({ event, resolve }) => {
-        
         if (event.url.pathname.startsWith('/')) {
             //grab the session ID from the cookie, and get the session data for it
             const { cookies } = event;
@@ -37,17 +36,23 @@ export const SvaultNative = (redirect) => {
         }
         if (event.url.pathname === '/loginValidate') {
             const { goodUser, header } = await login(event, redirect);
+            // const result = await login(event, redirect);
+            // console.log('result is', result, typeof result)
+            //if (result.ActionFailure.errorMessage)
             if (goodUser === true) {
                 return new Response('Redirect', { status: 303, headers: header });
             } else {
                 //return fail(400, { errorMessage: 'Missing username or password' })
-                return new Response('error in login validation')
+                //console.log(header.get('fail'))
+                //return the header with the 'fail' property
+                //event.locals.failure = header.get('fail');
+                return new Response(null, { status: 302, headers: header})
             }
         }
         if (event.url.pathname === "/registerValidate") {
             const newUser = await register(event);
             if (newUser.status === 200) {
-                return new Response('Redirect', { status: 303, headers: { Location: redirect } })
+                return new Response('Redirect', { status: 303, headers: { Location: '/login'} })
             } else {
                 return new Response('error in register validation')
             }
@@ -68,7 +73,7 @@ export const SvaultNative = (redirect) => {
 
 
 //invoked when a username/password is authenticated to TRUE
-export function makeCookieAndSession(username: string, redirect) {
+export function makeCookieAndSession(username: string, redirect: string) {
   const maxAge = eval(MAX_AGE)
   const sid = createSession(username, maxAge);
   const cookieHeader = `svault_auth=${sid}; HttpOnly; Max-Age=${maxAge}; Path=/`;
@@ -100,12 +105,13 @@ export const register = async (event) => {
 }
 
 //login
-export const login = async (event, redirect) => {
+export const login = async (event, redirect: string) => {
     //obtains form data when user clicks "login" button
     const data = await event.request.formData();
     const username = data.get('username')?.toString();
     const password = data.get('password')?.toString();
-    let goodUser = true;
+    let goodUser: boolean;
+    goodUser = true;
 
     if (username && password) {
         //checks username/password in database
@@ -123,7 +129,10 @@ export const login = async (event, redirect) => {
 
     //workaround if username/password do not match
     if (goodUser !== true) {
-        return fail(401, { errorMessage: 'Invalid username or password' });
+        const header = new Headers()
+        header.append('Location', '/') 
+        header.append('fail', "fail(401, { errorMessage: 'Invalid username or password' })");
+        return { goodUser, header };
     } else {
         const header = makeCookieAndSession(username, redirect);
         return { goodUser, header };
