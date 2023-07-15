@@ -38,8 +38,9 @@ export const SvaultNative = (redirect) => {
                 if (session) {
                     //sends username back to frontend to be used on the landing page
                     event.locals.username = session.username;
+                    console.log(event.locals)
                     console.log('Welcome Back!');
-                    return new Response('Welcome back', { status: 303 })
+                    return new Response('Welcome back', { status: 303 } )
                     //TODO/ITERATION: user roles on site 
                     // event.locals.roles = session.roles;
                 } else {
