@@ -1,9 +1,11 @@
-// Reexport your entry components here
+import GithubButton from './components/GithubButton.svelte';
+export { GithubButton }
+import GoogleButton from './components/GoogleButton.svelte';
+export { GoogleButton }
+// import FacebookButton from './components/FacebookButton.svelte';
+// export { FacebookButton }
 
 
-import LoginBox from './components/LoginBox.svelte'
-
-export { LoginBox }
-// export {  getGitHubIdentity, getGitHubValidation } from './server/oauth/github/api/github.js'
-// export { gitHub } from './server/oauth/github/api/githubHook.js'
-export { github } from './server/oauth/github/api/github.js'
+export { google } from './server/oauth/google/api/google.js'
+// export { facebook } from './server/oauth/facebook/api/facebook.js'
+export { github } from './server/oauth/github/api/github.js';

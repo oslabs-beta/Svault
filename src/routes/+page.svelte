@@ -1,5 +1,9 @@
 <script>
-    import LoginBox from "$lib/components/LoginBox.svelte";
+    import GithubButton from "$lib/components/GithubButton.svelte";
+    import GoogleButton from "$lib/components/GoogleButton.svelte";
+    import FacebookButton from "$lib/components/FacebookButton.svelte";
 </script>
 
-<LoginBox/>
+<GithubButton/>
+<GoogleButton/>
+<FacebookButton/>

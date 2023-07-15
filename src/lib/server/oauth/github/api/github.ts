@@ -5,20 +5,22 @@ import { redirect } from '@sveltejs/kit';
 //Custom hanndle hook for github to authenticate, validate, redirect, and return the github user email
 //Set github callback URL to /oauth/api/validate
 export const github = (clientId, clientSecret, path) => {
+
   return async ({ event, resolve }) => {
     //authorization endpoint to github
-    if (event.url.pathname === '/oauth/github/api') {
-      const provider = await getGitHubIdentity(clientId);
+    if (event.url.pathname === '/oauth/github/auth') {
+      const provider = getGitHubIdentity(clientId);
       return new Response('Redirect', { status: 302, headers: provider });
+
       //github callback enters here
-    } else if (event.url.pathname === '/oauth/api/validate') {
+    } else if (event.url.pathname === '/oauth/github/validate') {
       //if authorization on github request cancelled return to '/'
       const url = new URL(event.request.url);
       const error = url.searchParams.get('error');
       if (error === 'access_denied') {
         throw redirect(302, '/');
       }
-      //Upon validationn completetion return access token
+      //Upon validation completetion return access token
       const token = await getGitHubValidation(clientId, clientSecret, event);
       //Use access token to request user's github primary email address
       const user = await getUser(token, event);
@@ -28,15 +30,30 @@ export const github = (clientId, clientSecret, path) => {
         return new Response('error in authorizing github user');
       }
     }
+    //TODO ON MERGE setup logout and check that cookie functionality is similar between native and oauth
+    //   else if (event.url.pathname === '/logout') {
+    //     console.log('you are in logout')
+    //     const { cookies } = event;
+    //     const sid = cookies.get('github_oauth_state');
+    //     //console.log('sid', sid)
+    //     if (sid) {
+    //       console.log('cookie found, now delete it')
+    //       cookies.delete('github_oauth_state');
+    //       deleteSession(sid)
+    //       // include the cookies.delete for oauth name
+    //     }
+    //     return new Response('Redirect', { status: 303, headers: {Location: '/'} })
+    // }
     return await resolve(event);
   };
 };
 
+
 //set state as cookie and get authorization headers to github
-export async function getGitHubIdentity(client_id: string, cookieSetter?: any, maxAge?: number,): Promise<any> {
+export function getGitHubIdentity(client_id: string): Promise<any> {
   const state = nanoid();
   const cookieHeader = `github_oauth_state=${state}; HttpOnly; Max-Age=3600; Path=/`;
-  const authorizationUrlSearchParams = await new URLSearchParams({
+  const authorizationUrlSearchParams = new URLSearchParams({
     client_id: client_id,
     state,
     scope: "read:user, user:email",
@@ -47,6 +64,7 @@ export async function getGitHubIdentity(client_id: string, cookieSetter?: any, m
   headers.append('Location', authorizationUrl);
   return headers;
 }
+
 
 //check state cookie and fetch access token
 export async function getGitHubValidation(client_id: string, client_secret: string, event) {
@@ -83,10 +101,11 @@ export async function getGitHubValidation(client_id: string, client_secret: stri
       status: 400
     });
   }
-  const result = await response.json() as { access_token: string }
-  const accessToken = result.access_token
+  const result = await response.json() as { access_token: string };
+  const accessToken = result.access_token;
   return accessToken;
 }
+
 
 //get github user email with access token and return the user email to event.locals.user
 export async function getUser(accessToken, event) {
@@ -112,7 +131,6 @@ export async function getUser(accessToken, event) {
       const data = await emailResponse.json();
 
       for (const el of data) {
-        console.log('Inside For loop, el: ', el)
         if (el.primary === true) {
           useremail = el.email;
           break;
@@ -125,6 +143,7 @@ export async function getUser(accessToken, event) {
     event.locals.user = useremail;
 
     return useremail;
+    
   } catch (error) {
     return new Response(null, {
       status: 400
