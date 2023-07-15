@@ -1,19 +1,35 @@
 import { nanoid } from 'nanoid';
+import { redirect } from '@sveltejs/kit';
+//TODO cleanup code
 
-
+//Custom hanndle hook for github to authenticate, validate, redirect, and return the github user email
+//Set github callback URL to /oauth/api/validate
 export const github = (clientId, clientSecret, path) => {
-    return async ({ event, resolve }) => {
-        if (event.url.pathname === '/oauth/github/api') {
-            const provider = await getGitHubIdentity(clientId);
-            return new Response('Redirect', { status: 302, headers: provider });
-        } else if (event.url.pathname === '/oauth/api/validate') {
-            const token = await getGitHubValidation(clientId, clientSecret, event);
-            // TODO figure out what to do with token
-            event.locals.token = token;
-            return new Response('Redirect', { status: 303, headers: { Location: path } });
-        }
-        return await resolve(event);
-    };
+  return async ({ event, resolve }) => {
+    //authorization endpoint to github
+    if (event.url.pathname === '/oauth/github/api') {
+      const provider = await getGitHubIdentity(clientId);
+      return new Response('Redirect', { status: 302, headers: provider });
+      //github callback enters here
+    } else if (event.url.pathname === '/oauth/api/validate') {
+      //if authorization on github request cancelled return to '/'
+      const url = new URL(event.request.url);
+      const error = url.searchParams.get('error');
+      if (error === 'access_denied') {
+        throw redirect(302, '/');
+      }
+      //Upon validationn completetion return access token
+      const token = await getGitHubValidation(clientId, clientSecret, event);
+      //Use access token to request user's github primary email address
+      const user = await getUser(token, event);
+      if (user !== undefined) {
+        return new Response('Redirect', { status: 303, headers: { Location: path } });
+      } else {
+        return new Response('error in authorizing github user');
+      }
+    }
+    return await resolve(event);
+  };
 };
 
 
@@ -23,27 +39,29 @@ export async function getGitHubIdentity(client_id: string, cookieSetter?: any, m
   const authorizationUrlSearchParams = await new URLSearchParams({
     client_id: client_id,
     state,
-    params: { scope: "read:user user:email" },
+    scope: "read:user, user:email",
   });
   const authorizationUrl = `https://github.com/login/oauth/authorize?${authorizationUrlSearchParams}`;
   const headers = new Headers();
   headers.append('Set-Cookie', cookieHeader);
   headers.append('Location', authorizationUrl);
-  return headers
+  return headers;
 }
+
+
 export async function getGitHubValidation(client_id: string, client_secret: string, event) {
   const storedState = event.cookies.get("github_oauth_state");
   const state = event.url.searchParams.get("state");
 
   if (!storedState || !state || storedState !== state) {
     return new Response(null, {
-      status: 400
+      status: 400,
     });
   }
   const code = event.url.searchParams.get("code");
   if (!code) {
     return new Response(null, {
-      status: 400
+      status: 400,
     });
   }
   const response = await fetch("https://github.com/login/oauth/access_token", {
@@ -51,7 +69,8 @@ export async function getGitHubValidation(client_id: string, client_secret: stri
     body: new URLSearchParams({
       client_id: client_id,
       client_secret: client_secret,
-      code
+      code,
+      scope: "read:user, user:email",
     }),
     headers: {
       "Content-Type": "application/x-www-form-urlencoded",
@@ -64,17 +83,90 @@ export async function getGitHubValidation(client_id: string, client_secret: stri
       status: 400
     });
   }
-  // console.log('val response', response)
   const result = await response.json() as { access_token: string }
-  // console.log('val result',result)
   const accessToken = result.access_token
-
-  // do stuff with access token
-  // return some response
-  //TODO good practice to store refresh token with github username to db?
-  return accessToken
+  return accessToken;
 }
 
+//TODO make the user fetches work for a github app and not an oauth app
+// export async function getUser(accessToken, event) {
+//   let useremail;
+//   await fetch("https://api.github.com/user", {
+//     headers: {
+//       Accept: 'application/vnd.github.v3+json',
+//       Authorization: `bearer ${accessToken}`,
+//     },
+//   })
+//     .then((res) => res.json())
+//     .then((user) => {
+//       if (!user.email) {
+//          fetch("https://api.github.com/user/emails", {
+//           headers: {
+//             Accept: 'application/vnd.github.v3+json',
+//             Authorization: `bearer ${accessToken}`,
+//           },
+//         })
+//           .then((res) => res.json())
+//           .then((data) => {
+//             // console.log(data)
+//           for(const el of data){
+//             console.log(el)
+//             if(el.primary === true){
+//               useremail = el.email
+//             }
+//           }
+//       });
+//     }
+//       else {
+//         useremail = user.email;
+//       }
 
+//     })
+//   event.locals.user = useremail;
+//   console.log('useremail',useremail)
+//   return useremail;
+// }
 
+export async function getUser(accessToken, event) {
+  try {
+    let useremail;
 
+    const response = await fetch("https://api.github.com/user", {
+      headers: {
+        Accept: 'application/vnd.github.v3+json',
+        Authorization: `bearer ${accessToken}`,
+      },
+    });
+
+    const user = await response.json();
+
+    if (!user.email) {
+      const emailResponse = await fetch("https://api.github.com/user/emails", {
+        headers: {
+          Accept: 'application/vnd.github.v3+json',
+          Authorization: `bearer ${accessToken}`,
+        },
+      });
+
+      const data = await emailResponse.json();
+
+      for (const el of data) {
+        console.log('Inside For loop, el: ', el)
+        if (el.primary === true) {
+          useremail = el.email;
+          break;
+        }
+      }
+    } else {
+      useremail = user.email;
+    }
+
+    event.locals.user = useremail;
+    console.log(useremail);
+    return useremail;
+  } catch (error) {
+    // Handle error
+    console.error(error);
+    throw error;
+  }
+}
