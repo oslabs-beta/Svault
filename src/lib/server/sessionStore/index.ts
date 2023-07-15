@@ -21,7 +21,7 @@ type Sid = string;
 
 //in memory session Store
 const sessionStore = new Map<Sid, SessionInfoCache>();
-let nextClean = Date.now() //+ 1000 * 60 * 60; // 1 hour
+let nextClean = Date.now() + 1000 * 60 * 60; // 1 hour
 
 function getSid(): Sid {
   return randomBytes(32).toString('hex');
@@ -37,7 +37,7 @@ function clean() {
     }
   }
   // // TODO: delete session from browser storage
-  nextClean = Date.now() //+ 1000 * 60 * 60; // 1 hour
+  nextClean = Date.now() + 1000 * 60 * 60; // 1 hour
 }
 
 //calls clean() function if it has been over 1 hour to delete expired sessions
@@ -69,7 +69,6 @@ export function createSession(username: string, maxAge: number): string {
     ...data,
     invalidAt: maxAge
   });
-  console.log('sessionStore:', sessionStore);
   return sid;
 }
 
@@ -77,12 +76,11 @@ export function createSession(username: string, maxAge: number): string {
 //gets session from sessionStore, if not in store, adds to it
 export function getSession(sid: Sid): SessionInfo | undefined {
   //if session present in sessionStore
-  console.log(sessionStore)
   if (sessionStore.has(sid)) {
     return sessionStore.get(sid);
   } else {
     /* 
-      // TODO: get session from browser on frontend and store in session store
+      // TODO/ITERATION: get session from browser on frontend and store in session store
       // const session = sessionStorage.getItem(username)
       // if (session) {
       //   sessionStore.set(sid, session);
@@ -91,7 +89,6 @@ export function getSession(sid: Sid): SessionInfo | undefined {
     */
   }
   //if no session, return undefined
-  console.log('session not found', sid);
   return undefined;
 }
 
@@ -99,14 +96,14 @@ export function getSession(sid: Sid): SessionInfo | undefined {
 export function deleteSession(sid: string): void {
   sessionStore.delete(sid);
   /*
-    // // TODO: remove session from browser storage
+    // // TODO/ITERATION: remove session from browser storage
     // // sessionStorage.removeItem(username);
     // // localStorage.removeItem(username);
   */
 }
 
 /*
-  // TODO: send back to frontend to store in browser
+  // TODO/ITERATION: send back to frontend to store in browser
   // export function setBrowserSession(sid: string, username: string) {
   //   sessionStorage.setItem(username, sid);
   //   localStorage.setItem(username, sid);

@@ -4,6 +4,7 @@ import type { Handle, Cookies } from '@sveltejs/kit';
 import { checkUserCredentials, createUser } from '$lib/server/db/index.js';
 import { createSession, getSession, deleteSession } from '$lib/server/sessionStore/index.js';
 import { fail, redirect } from '@sveltejs/kit';
+import { MAX_AGE } from '$env/static/private'
 
 
 //Hook master
@@ -22,14 +23,10 @@ export const SvaultNative = (redirect) => {
                 if (session) {
                     //sends username back to frontend to be used on the landing page
                     event.locals.username = session.username;
-                    console.log('Welcome Back!');
-                    // throw redirect('/')
-                    // return new Response('Redirect', { status: 303, headers: {Location: '/'} })
                     //TODO/ITERATION: user roles on site 
                     // event.locals.roles = session.roles;
                 } else {
                     // remove invalid/expired/unknown cookies
-                    console.log('Session expired/not found')
                     cookies.delete('svault_auth');
                     
                 }
@@ -37,11 +34,6 @@ export const SvaultNative = (redirect) => {
         }
         if (event.url.pathname === '/loginValidate') {
             const { goodUser, header } = await login(event, redirect);
-            // console.log('goodUser is:', goodUser);
-            //console.log(`header is: ${header}`);
-            //console.log('event locals is', event.locals);
-            //return new Response('Redirect', { status: 303, headers: header});
-  
             if (goodUser === true) {
                 return new Response('Redirect', { status: 303, headers: header });
             } else {
@@ -51,19 +43,7 @@ export const SvaultNative = (redirect) => {
         }
         if (event.url.pathname === "/registerValidate") {
             const newUser = await register(event);
-            // console.log(newUser)
             if (newUser.status === 200) {
-               
-                /*
-                    // TODO: Do we autologin new users once they input username, password?
-                    // if (isUser === true) {
-                    //     console.log('Inside register, if statement for login')
-                    //     return new Response('Redirect', { status: 303, headers: { Location:  redirect } });
-                    // } else {
-                    //     return new Response('error in login validation')
-                    // }
-                */
-
                 return new Response('Redirect', { status: 303, headers: { Location: redirect } })
             } else {
                 return new Response('error in register validation')
@@ -73,7 +53,6 @@ export const SvaultNative = (redirect) => {
             console.log('you are in logout')
             const { cookies } = event;
             const sid = cookies.get('svault_auth');
-            //console.log('sid', sid)
             if (sid) {
               console.log('cookie found, now delete it')
               cookies.delete('svault_auth');
@@ -89,20 +68,13 @@ export const SvaultNative = (redirect) => {
 
 //invoked when a username/password is authenticated to TRUE
 export function makeCookieAndSession(username: string, redirect) {
-    /*
-        // TODO - have the user have control over the session expiration time
-    */
-    const maxAge = Date.now() + 1000 * 1;
-    const sid = createSession(username, maxAge);
-    
-    
+  const maxAge = eval(MAX_AGE)
+  const sid = createSession(username, maxAge);
   const cookieHeader = `svault_auth=${sid}; HttpOnly; Max-Age=${maxAge}; Path=/`;
   const headers = new Headers();
   headers.append('Set-Cookie', cookieHeader);
-//   console.log(headers)
   headers.append('Location', redirect);
   headers.append('maxAge', `${maxAge}`);
-  console.log(headers)
   return headers;
 }
 
@@ -112,7 +84,6 @@ export const register = async (event) => {
     const data = await event.request.formData();
     const username = data.get('username')?.toString();
     const password = data.get('password')?.toString();
-    //console.log(username, password);
     if (username && password) {
         try {
             await createUser(username, password);
@@ -133,13 +104,11 @@ export const login = async (event, redirect) => {
     const data = await event.request.formData();
     const username = data.get('username')?.toString();
     const password = data.get('password')?.toString();
-    //console.log('data', username, password)
     let goodUser = true;
 
     if (username && password) {
         //checks username/password in database
         await checkUserCredentials(username, password).then((res) => {
-            // console.log('res is ', res);
             //could not RETURN out of this await statement, needed to go in outer scope, so we declare goodUser as false here and throw the fail() outside of await statement
             if (res === false) {
                 console.log('wrong password');
