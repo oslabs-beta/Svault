@@ -2,6 +2,7 @@
 // // TODO: clean up TS syntax
 import bcrypt from 'bcrypt';
 import db from './models.js';
+import { TABLE_NAME } from '$env/static/private';
 
 // Function to create user
 export async function createUser(
@@ -18,10 +19,10 @@ export async function createUser(
   const hashPassword = await bcrypt.hash(password, workFactor);
 
   const sql = `
-    insert into users (username, password)
+    insert into ${TABLE_NAME} (username, password)
     values ('${username}', '${hashPassword}')
     `;
-  
+  console.log(sql)
   const result = await db.query(sql);
   // return;
   console.log('result in createUser',result);
@@ -35,11 +36,11 @@ export async function checkUserCredentials(
 ): Promise<any> {
   const queryString = `
     select username, password
-      from users
+      from ${TABLE_NAME}
       where username = '${username}'
     `;
   const result = await db.query(queryString);
-
+  console.log(queryString)
   // Sends username to frontend
   const workFactor = 10;
   if (result) {
