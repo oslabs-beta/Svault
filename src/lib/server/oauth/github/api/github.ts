@@ -32,7 +32,7 @@ export const github = (clientId, clientSecret, path) => {
   };
 };
 
-
+//set state as cookie and get authorization headers to github
 export async function getGitHubIdentity(client_id: string, cookieSetter?: any, maxAge?: number,): Promise<any> {
   const state = nanoid();
   const cookieHeader = `github_oauth_state=${state}; HttpOnly; Max-Age=3600; Path=/`;
@@ -48,7 +48,7 @@ export async function getGitHubIdentity(client_id: string, cookieSetter?: any, m
   return headers;
 }
 
-
+//check state cookie and fetch access token
 export async function getGitHubValidation(client_id: string, client_secret: string, event) {
   const storedState = event.cookies.get("github_oauth_state");
   const state = event.url.searchParams.get("state");
@@ -88,49 +88,10 @@ export async function getGitHubValidation(client_id: string, client_secret: stri
   return accessToken;
 }
 
-//TODO make the user fetches work for a github app and not an oauth app
-// export async function getUser(accessToken, event) {
-//   let useremail;
-//   await fetch("https://api.github.com/user", {
-//     headers: {
-//       Accept: 'application/vnd.github.v3+json',
-//       Authorization: `bearer ${accessToken}`,
-//     },
-//   })
-//     .then((res) => res.json())
-//     .then((user) => {
-//       if (!user.email) {
-//          fetch("https://api.github.com/user/emails", {
-//           headers: {
-//             Accept: 'application/vnd.github.v3+json',
-//             Authorization: `bearer ${accessToken}`,
-//           },
-//         })
-//           .then((res) => res.json())
-//           .then((data) => {
-//             // console.log(data)
-//           for(const el of data){
-//             console.log(el)
-//             if(el.primary === true){
-//               useremail = el.email
-//             }
-//           }
-//       });
-//     }
-//       else {
-//         useremail = user.email;
-//       }
-
-//     })
-//   event.locals.user = useremail;
-//   console.log('useremail',useremail)
-//   return useremail;
-// }
-
+//get github user email with access token and return the user email to event.locals.user
 export async function getUser(accessToken, event) {
   try {
     let useremail;
-
     const response = await fetch("https://api.github.com/user", {
       headers: {
         Accept: 'application/vnd.github.v3+json',
@@ -162,11 +123,11 @@ export async function getUser(accessToken, event) {
     }
 
     event.locals.user = useremail;
-    console.log(useremail);
+
     return useremail;
   } catch (error) {
-    // Handle error
-    console.error(error);
-    throw error;
+    return new Response(null, {
+      status: 400
+    });
   }
 }
