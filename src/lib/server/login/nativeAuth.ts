@@ -1,6 +1,6 @@
 //master for all native login/register functions
 
-import type { Handle, Cookies } from '@sveltejs/kit';
+//import type { Handle, Cookies } from '@sveltejs/kit';
 import { checkUserCredentials, createUser } from '$lib/server/db/index.js';
 import { createSession, getSession, deleteSession } from '$lib/server/sessionStore/index.js';
 import { fail, redirect } from '@sveltejs/kit';
@@ -23,6 +23,9 @@ export const SvaultNative = (redirect) => {
                 if (session) {
                     //sends username back to frontend to be used on the landing page
                     event.locals.username = session.username;
+                    //TODO: send session info back
+                    //event.locals.session = session;
+                    //console.log('event locals session', event.locals.session)
                     //TODO/ITERATION: user roles on site 
                     // event.locals.roles = session.roles;
                 } else {
@@ -50,14 +53,12 @@ export const SvaultNative = (redirect) => {
             }
         }
         if (event.url.pathname === '/logout') {
-            console.log('you are in logout')
             const { cookies } = event;
             const sid = cookies.get('svault_auth');
             if (sid) {
-              console.log('cookie found, now delete it')
               cookies.delete('svault_auth');
               deleteSession(sid)
-              // include the cookies.delete for oauth name
+              // TODO: include the cookies.delete for oauth name
             }
             return new Response('Redirect', { status: 303, headers: {Location: '/'} })
         }
@@ -111,7 +112,6 @@ export const login = async (event, redirect) => {
         await checkUserCredentials(username, password).then((res) => {
             //could not RETURN out of this await statement, needed to go in outer scope, so we declare goodUser as false here and throw the fail() outside of await statement
             if (res === false) {
-                console.log('wrong password');
                 goodUser = false;
             }
         });

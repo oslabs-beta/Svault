@@ -10,7 +10,6 @@ const db = new Pool({
 
 export default {
   query: (text: string, params?, callback?) => {
-    console.log('executed query', text);
     return db.query(text, params, callback);
   },
   connectToDB: async () => await db.connect(),
