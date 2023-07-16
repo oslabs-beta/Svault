@@ -4,9 +4,17 @@ import { redirect } from '@sveltejs/kit';
 
 //Custom hanndle hook for github to authenticate, validate, redirect, and return the github user email
 //Set github callback URL to /oauth/api/validate
+let userMain;
 export const github = (clientId, clientSecret, path) => {
-
   return async ({ event, resolve }) => {
+    //handle locals username
+    if (event.url.pathname.startsWith('/')) {
+      const { cookies } = event;
+            const sid = cookies.get('github_oauth_state');
+            if (sid) {
+              event.locals.username = userMain
+            }
+    }
     //authorization endpoint to github
     if (event.url.pathname === '/oauth/github/auth') {
       const provider = getGitHubIdentity(clientId);
@@ -24,27 +32,16 @@ export const github = (clientId, clientSecret, path) => {
       const token = await getGitHubValidation(clientId, clientSecret, event);
       //Use access token to request user's github primary email address
       const user = await getUser(token, event);
-      event.locals.username = user;
+
       if (user !== undefined) {
-        return new Response('Redirect', { status: 303, headers: { Location: path } });
+        userMain = user;
+         return new Response('Redirect', { status: 303, headers: { Location: path } });
       } else {
         return new Response('error in authorizing github user');
       }
     }
-    //TODO ON MERGE setup logout and check that cookie functionality is similar between native and oauth
-    //   else if (event.url.pathname === '/logout') {
-    //     console.log('you are in logout')
-    //     const { cookies } = event;
-    //     const sid = cookies.get('github_oauth_state');
-    //     //console.log('sid', sid)
-    //     if (sid) {
-    //       console.log('cookie found, now delete it')
-    //       cookies.delete('github_oauth_state');
-    //       deleteSession(sid)
-    //       // include the cookies.delete for oauth name
-    //     }
-    //     return new Response('Redirect', { status: 303, headers: {Location: '/'} })
-    // }
+    //TODO setup logout and check that cookie functionality is similar between native and oauth
+    
     return await resolve(event);
   };
 };
@@ -145,7 +142,7 @@ export async function getUser(accessToken, event) {
 
 
     return useremail;
-    
+
   } catch (error) {
     return new Response(null, {
       status: 400

@@ -3,9 +3,17 @@ import { OAuth2Client } from "google-auth-library";
 
 //Custom hanndle hook for google to authenticate, validate, redirect, and return the google user email
 //Set google callback URL to /oauth/api/validate
+let userMain;
 export const google = (clientId, clientSecret, path, callbackurl) => {
 
   return async ({ event, resolve }) => {
+    if (event.url.pathname.startsWith('/')) {
+      const { cookies } = event;
+            const sid = cookies.get('google_oauth_state');
+            if (sid) {
+              event.locals.username = userMain
+            }
+    }
     //authorization endpoint to google
     if (event.url.pathname === '/oauth/google/auth') {
       const provider = getGoogleIdentity(clientId, clientSecret, callbackurl);
@@ -16,8 +24,9 @@ export const google = (clientId, clientSecret, path, callbackurl) => {
       const token = await getGoogleValidation(clientId, clientSecret, event, callbackurl);
       //Use access token to request user's google primary email address
       const user = await getUser(token, event);
-      event.locals.username = user;
+
       if (user !== undefined) {
+        userMain = user;
         return new Response('Redirect', { status: 303, headers: { Location: path } });
       } else {
         return new Response('error in authorizing google user');
