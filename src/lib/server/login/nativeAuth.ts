@@ -6,6 +6,8 @@ import { createSession, getSession, deleteSession } from '$lib/server/sessionSto
 import { fail } from '@sveltejs/kit';
 import { MAX_AGE } from '$env/static/private';
 
+
+
 export const SvaultNative = (redirect: string) => {
     return async ({ event, resolve }) => {
         if (event.url.pathname.startsWith('/')) {
@@ -17,6 +19,7 @@ export const SvaultNative = (redirect: string) => {
                 if (session) {
                     //sends username back to frontend to be used on the landing page
                     event.locals.username = session.username;
+                    //event.locals.failure = "Placeholder"
                     //TODO: send session info back
                     //event.locals.session = session;
                     //console.log('event locals session', event.locals.session)
@@ -25,7 +28,7 @@ export const SvaultNative = (redirect: string) => {
                 } else {
                     // remove invalid/expired/unknown cookies
                     cookies.delete('svault_auth');
-                    
+
                 }
             }
         }
@@ -40,14 +43,17 @@ export const SvaultNative = (redirect: string) => {
                 //return fail(400, { errorMessage: 'Missing username or password' })
                 //console.log(header.get('fail'))
                 //return the header with the 'fail' property
-                //event.locals.failure = header.get('fail');
-                return new Response(null, { status: 302, headers: header})
+                event.locals.failure = header.get('fail');
+                // const fail = header.get('fail');
+                // alert('wrong password');
+                // throw Error(302, 'Invalid password');
+                // return new Response(null, { status: 302, headers: header })
             }
         }
         if (event.url.pathname === "/registerValidate") {
             const newUser = await register(event);
             if (newUser.status === 200) {
-                return new Response('Redirect', { status: 303, headers: { Location: '/login'} })
+                return new Response('Redirect', { status: 303, headers: { Location: '/login' } })
             } else {
                 return new Response('error in register validation')
             }
@@ -56,10 +62,10 @@ export const SvaultNative = (redirect: string) => {
             const { cookies } = event;
             const sid = cookies.get('svault_auth');
             if (sid) {
-              cookies.delete('svault_auth');
-              deleteSession(sid)
+                cookies.delete('svault_auth');
+                deleteSession(sid)
             }
-            return new Response('Redirect', { status: 303, headers: {Location: '/'} })
+            return new Response('Redirect', { status: 303, headers: { Location: '/' } })
         }
         return await resolve(event);
     }
@@ -68,14 +74,14 @@ export const SvaultNative = (redirect: string) => {
 
 //invoked when a username/password is authenticated to TRUE
 export function makeCookieAndSession(username: string, redirect: string) {
-  const maxAge = eval(MAX_AGE)
-  const sid = createSession(username, maxAge);
-  const cookieHeader = `svault_auth=${sid}; HttpOnly; Max-Age=${maxAge}; Path=/`;
-  const headers = new Headers();
-  headers.append('Set-Cookie', cookieHeader);
-  headers.append('Location', redirect);
-  headers.append('maxAge', `${maxAge}`);
-  return headers;
+    const maxAge = eval(MAX_AGE)
+    const sid = createSession(username, maxAge);
+    const cookieHeader = `svault_auth=${sid}; HttpOnly; Max-Age=${maxAge}; Path=/`;
+    const headers = new Headers();
+    headers.append('Set-Cookie', cookieHeader);
+    headers.append('Location', redirect);
+    headers.append('maxAge', `${maxAge}`);
+    return headers;
 }
 
 //register
@@ -101,6 +107,7 @@ export const register = async (event) => {
 //login
 export const login = async (event, redirect: string) => {
     //obtains form data when user clicks "login" button
+
     const data = await event.request.formData();
     const username = data.get('username')?.toString();
     const password = data.get('password')?.toString();
@@ -109,22 +116,27 @@ export const login = async (event, redirect: string) => {
 
     if (username && password) {
         //checks username/password in database
-        await checkUserCredentials(username, password).then((res) => {
-            //could not RETURN out of this await statement, needed to go in outer scope, so we declare goodUser as false here and throw the fail() outside of await statement
-            if (res === false) {
-                goodUser = false;
-            }
-        });
-    } else {
-        //if someone logs in without a username or password
-        //should never happen because they are required form data points in page.svelte
-        return fail(400, { errorMessage: 'Missing username or password' });
+        const response = await checkUserCredentials(username, password);
+        if (response === false) goodUser = false;
+
+        // // OLD VERSION
+        // await checkUserCredentials(username, password).then((res) => {
+        //     //could not RETURN out of this await statement, needed to go in outer scope, so we declare goodUser as false here and throw the fail() outside of await statement
+        //     if (res === false) {
+        //         goodUser = false;
+        //     }
+        // });
     }
+    // else {
+    //     //if someone logs in without a username or password
+    //     //should never happen because they are required form data points in page.svelte
+    //     return fail(400, { errorMessage: 'Missing username or password' });
+    // }
 
     //workaround if username/password do not match
     if (goodUser !== true) {
         const header = new Headers()
-        header.append('Location', '/') 
+        header.append('Location', '/login')
         header.append('fail', "fail(401, { errorMessage: 'Invalid username or password' })");
         return { goodUser, header };
     } else {

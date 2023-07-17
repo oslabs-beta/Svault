@@ -1,7 +1,5 @@
-// USED FOR DEVELOPMENT TESTING
-
 import { SvaultNative } from "$lib/server/login/nativeAuth.ts";
-import {SvaultOauth} from './lib/server/oauth/svaultoauth.ts'
+import { SvaultOauth } from './lib/server/oauth/svaultoauth.ts'
 import { github } from './lib/server/oauth/github/api/github.ts';
 import { google } from './lib/server/oauth/google/api/google.ts';
 import { discord } from "$lib/server/oauth/discord/api/discord.ts";
@@ -13,7 +11,7 @@ import { sequence } from '@sveltejs/kit/hooks';
 
 //set redirect path
 const redirectPath = '/secret'
-///google callback url has to match what callback url you setup in your google app
+///google/discord callback urls have to match what callback url you setup in your development app
 const googleCallback = 'http://localhost:5173/oauth/google/validate'
 const discordCallback = 'http://localhost:5173/oauth/discord/validate'
 //place the oauth providers here
@@ -22,10 +20,10 @@ const providers = [
     google(GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, redirectPath, googleCallback),
     discord(DISCORD_CLIENT_ID, DISCORD_CLIENT_SECRET, redirectPath, discordCallback)
   ];
-//main svault ouath handler
+//svault ouath handler
 export const oauth = SvaultOauth({ providers });
 
-//native handling
+//svault native handler
 export const native = SvaultNative(redirectPath);
 
 export const handle = sequence(oauth, native);

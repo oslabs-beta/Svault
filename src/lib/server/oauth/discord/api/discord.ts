@@ -105,4 +105,4 @@ export async function getUser(accessToken) {
         status: 400
       });
     }
-  }
+}

@@ -1,6 +1,6 @@
 {
-	"name": "@trisbt/oauthtest",
-	"version": "1.7.0",
+	"name": "svault",
+	"version": "1.0.0",
 	"description": "Authentication library for SvelteKit",
 	"keywords": [
 		"Svelte",

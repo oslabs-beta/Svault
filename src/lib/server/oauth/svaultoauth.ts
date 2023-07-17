@@ -14,7 +14,6 @@ export const SvaultOauth = ({ providers }) => {
             }
         }
         //logout 
-        //svelte cookies.delete not working
         if (event.url.pathname === '/logout' && event.cookies.get('svault_auth') === undefined) {
             let deleteCookieResponse;
             for (const provider of providers) {
