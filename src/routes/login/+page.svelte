@@ -17,25 +17,25 @@
 	<!-- <form bind:this={form} > -->
 	<form method="POST">
 		<input
-			class="input my-2"
-			type="text"
-			placeholder="Username"
-			name="username"
-			required
+		class="input my-2"
+		type="text"
+		placeholder="Username"
+		name="username"
+		required
 		/>
 		<input
-			class="input my-2"
-			type="password"
-			placeholder="Password"
-			name="password"
-			required
+		class="input my-2"
+		type="password"
+		placeholder="Password"
+		name="password"
+		required
 		/>
-
+		
 		<!-- display error message, if errorMessage is thrown by fail() function in src/routes/login/+page.server.ts-->
 		{#if data.failure}
-			<div class="has-text-danger my-2">{data.failure.errorMessage}</div>
+			<div class="has-text-danger my-2">{data.failure}</div>
 		{/if}
-
+		
 		<button
 			class="button is-primary mt-4"
 			type="submit"

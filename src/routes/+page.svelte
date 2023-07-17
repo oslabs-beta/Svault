@@ -43,9 +43,9 @@
     </div>
 
     <div>
-      {#if data.failure}
+      <!-- {#if data.failure}
         <p>failed!</p>
-      {/if}
+      {/if} -->
     </div>
   </nav>
 </header>
