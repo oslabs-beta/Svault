@@ -1,5 +1,5 @@
 import { nanoid } from 'nanoid';
-import { redirect } from '@sveltejs/kit';
+
 //TODO cleanup code
 
 //Custom hanndle hook for github to authenticate, validate, redirect, and return the github user email
