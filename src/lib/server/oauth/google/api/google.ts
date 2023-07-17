@@ -3,39 +3,27 @@ import { OAuth2Client } from "google-auth-library";
 
 //Custom hanndle hook for google to authenticate, validate, redirect, and return the google user email
 //Set google callback URL to /oauth/api/validate
-let userMain;
-export const google = (clientId, clientSecret, path, callbackurl) => {
 
-  return async ({ event, resolve }) => {
-    if (event.url.pathname.startsWith('/')) {
-      const { cookies } = event;
-            const sid = cookies.get('google_oauth_state');
-            if (sid) {
-              event.locals.username = userMain
-            }
-    }
-    //authorization endpoint to google
-    if (event.url.pathname === '/oauth/google/auth') {
+export const google = (clientId, clientSecret, redirectPath, callbackurl) => {
+  return {
+    name: 'google',
+    authPath: '/oauth/google/auth',
+    validatePath: '/oauth/google/validate',
+    getAuthIdentity: () => {
       const provider = getGoogleIdentity(clientId, clientSecret, callbackurl);
-      return new Response('Redirect', { status: 302, headers: provider });
-      //google callback enters here
-    } else if (event.url.pathname === '/oauth/google/validate') {
-      //Upon validation completetion return access token
+      return provider;
+    },
+    getValidation: async (event) => {
       const token = await getGoogleValidation(clientId, clientSecret, event, callbackurl);
-      //Use access token to request user's google primary email address
-      const user = await getUser(token, event);
-
-      if (user !== undefined) {
-        userMain = user;
-        return new Response('Redirect', { status: 303, headers: { Location: path } });
-      } else {
-        return new Response('error in authorizing google user');
-      }
-    }
-    return await resolve(event);
+      return token;
+    },
+    getUser: async (token) => {
+      const user = await getUser(token);
+      return user;
+    },
+    redirectPath,
   };
 };
-
 
 //set state as cookie and get authorization headers to google
 export function getGoogleIdentity(client_id: string, client_secret: string, callbackurl): Promise<any> {
@@ -66,7 +54,6 @@ export function getGoogleIdentity(client_id: string, client_secret: string, call
 export async function getGoogleValidation(client_id: string, client_secret: string, event, callbackurl) {
   const storedState = event.cookies.get("google_oauth_state");
   const state = event.url.searchParams.get("state");
-  const redirectURL = callbackurl
   if (!storedState || !state || storedState !== state) {
     return new Response(null, {
       status: 400,
@@ -96,8 +83,7 @@ export async function getGoogleValidation(client_id: string, client_secret: stri
 }
 
 //get google user email with access token and return the user email to event.locals.user
-// 'https://www.googleapis.com/auth/userinfo.profile'
-export async function getUser(accessToken, event) {
+export async function getUser(accessToken) {
   try {
     const response = await fetch('https://www.googleapis.com/oauth2/v2/userinfo', {
       headers: {

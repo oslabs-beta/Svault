@@ -4,48 +4,27 @@ import { redirect } from '@sveltejs/kit';
 
 //Custom hanndle hook for github to authenticate, validate, redirect, and return the github user email
 //Set github callback URL to /oauth/api/validate
-let userMain;
-export const github = (clientId, clientSecret, path) => {
-  return async ({ event, resolve }) => {
-    //handle locals username
-    if (event.url.pathname.startsWith('/')) {
-      const { cookies } = event;
-            const sid = cookies.get('github_oauth_state');
-            if (sid) {
-              event.locals.username = userMain
-            }
-    }
-    //authorization endpoint to github
-    if (event.url.pathname === '/oauth/github/auth') {
+// let userMain;
+export const github = (clientId, clientSecret, redirectPath) => {
+  return {
+    name: 'github',
+    authPath: '/oauth/github/auth',
+    validatePath: '/oauth/github/validate',
+    getAuthIdentity: () => {
       const provider = getGitHubIdentity(clientId);
-      return new Response('Redirect', { status: 302, headers: provider });
-
-      //github callback enters here
-    } else if (event.url.pathname === '/oauth/github/validate') {
-      //if authorization on github request cancelled return to '/'
-      const url = new URL(event.request.url);
-      const error = url.searchParams.get('error');
-      if (error === 'access_denied') {
-        throw redirect(302, '/');
-      }
-      //Upon validation completetion return access token
+      return provider;
+    },
+    getValidation: async (event) => {
       const token = await getGitHubValidation(clientId, clientSecret, event);
-      //Use access token to request user's github primary email address
-      const user = await getUser(token, event);
-
-      if (user !== undefined) {
-        userMain = user;
-         return new Response('Redirect', { status: 303, headers: { Location: path } });
-      } else {
-        return new Response('error in authorizing github user');
-      }
-    }
-    //TODO setup logout and check that cookie functionality is similar between native and oauth
-    
-    return await resolve(event);
+      return token;
+    },
+    getUser: async (token) => {
+      const user = await getUser(token);
+      return user;
+    },
+    redirectPath,
   };
 };
-
 
 //set state as cookie and get authorization headers to github
 export function getGitHubIdentity(client_id: string): Promise<any> {
@@ -106,7 +85,7 @@ export async function getGitHubValidation(client_id: string, client_secret: stri
 
 
 //get github user email with access token and return the user email to event.locals.user
-export async function getUser(accessToken, event) {
+export async function getUser(accessToken) {
   try {
     let useremail;
     const response = await fetch("https://api.github.com/user", {
@@ -137,12 +116,7 @@ export async function getUser(accessToken, event) {
     } else {
       useremail = user.email;
     }
-
-
-
-
     return useremail;
-
   } catch (error) {
     return new Response(null, {
       status: 400

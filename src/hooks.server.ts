@@ -1,6 +1,7 @@
 // USED FOR DEVELOPMENT TESTING
 
 import { SvaultNative } from "$lib/server/login/nativeAuth.ts";
+import {SvaultOauth} from './lib/server/oauth/svaultoauth.ts'
 import { github } from './lib/server/oauth/github/api/github.ts';
 import { google } from './lib/server/oauth/google/api/google.ts';
 
@@ -14,12 +15,18 @@ import { sequence } from '@sveltejs/kit/hooks';
 const redirectPath = '/secret'
 ///google callback url has to match what callback url you setup in your google app
 const googleCallback = 'http://localhost:5173/oauth/google/validate'
-export const first = google(GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, redirectPath, googleCallback)
-export const second = github(GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET, redirectPath)
-export const third = SvaultNative(redirectPath);
+//place the oauth providers here
+const providers = [
+    github(GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET, redirectPath),
+    google(GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, redirectPath, googleCallback),
+  ];
+//main svault ouath handler
+export const oauth = SvaultOauth({ providers });
 
+//native handling
+export const native = SvaultNative(redirectPath);
 
-export const handle = sequence(first, second, third, fourth);
+export const handle = sequence(oauth, native);
 
 
 

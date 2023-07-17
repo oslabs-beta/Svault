@@ -12,7 +12,6 @@
 
   import GithubButton from "$lib/components/GithubButton.svelte";
   import GoogleButton from "$lib/components/GoogleButton.svelte";
-  import FacebookButton from "$lib/components/FacebookButton.svelte";
   export let data: LayoutServerData;
 </script>
 
@@ -51,5 +50,4 @@
 </header>
 <GithubButton />
 <GoogleButton />
-<FacebookButton />
 <slot />
