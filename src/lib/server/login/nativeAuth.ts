@@ -6,11 +6,6 @@ import { createSession, getSession, deleteSession } from '$lib/server/sessionSto
 import { fail } from '@sveltejs/kit';
 import { MAX_AGE } from '$env/static/private';
 
-
-//Hook master
-/*
-    //TODO setup login after registering
-*/
 export const SvaultNative = (redirect: string) => {
     return async ({ event, resolve }) => {
         if (event.url.pathname.startsWith('/')) {
@@ -63,7 +58,6 @@ export const SvaultNative = (redirect: string) => {
             if (sid) {
               cookies.delete('svault_auth');
               deleteSession(sid)
-              // TODO: include the cookies.delete for oauth name
             }
             return new Response('Redirect', { status: 303, headers: {Location: '/'} })
         }

@@ -11,6 +11,15 @@ export const SvaultOauth = ({ providers }) => {
           }
         }
       }
+      if (event.url.pathname === '/logout') {
+        const { cookies } = event;
+        for (const provider of providers) {
+            console.log(provider.name)
+          cookies.delete(`${provider.name}_oauth_state`);
+        }
+        // You can add additional logic here, such as redirecting the user to a specific page after logout
+        return new Response('Logout Successful');
+      }
       for (const provider of providers) {
         if (event.url.pathname === provider.authPath) {
           const authProvider = provider.getAuthIdentity();
