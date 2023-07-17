@@ -19,9 +19,12 @@ export const SvaultOauth = ({ providers }) => {
             let deleteCookieResponse;
             for (const provider of providers) {
                 const cookieName = `${provider.name}_oauth_state`;
-                const deleteCookieHeader = `${cookieName}=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT;`;
-                deleteCookieResponse = new Response('Logging Out...', { status: 303, headers: { Location: '/' } });
-                deleteCookieResponse.headers.append('Set-Cookie', deleteCookieHeader);
+                const sid = event.cookies.get(cookieName)
+                if(sid){
+                    const deleteCookieHeader = `${cookieName}=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT;`;
+                    deleteCookieResponse = new Response('Logging Out...', { status: 303, headers: { Location: '/' } });
+                    deleteCookieResponse.headers.append('Set-Cookie', deleteCookieHeader);
+                }
             }
             return deleteCookieResponse;
         }
@@ -34,8 +37,9 @@ export const SvaultOauth = ({ providers }) => {
             } else if (event.url.pathname === provider.validatePath) {
                 const token = await provider.getValidation(event);
                 const user = await provider.getUser(token);
+                // console.log(user.username)
                 if (user !== undefined) {
-                    userMain = user;
+                    userMain = user.username;
                     return new Response('Redirect', { status: 303, headers: { Location: provider.redirectPath } });
                 } else {
                     return new Response(`Error in authorizing ${provider.name} user`);

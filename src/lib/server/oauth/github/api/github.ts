@@ -33,7 +33,7 @@ export function getGitHubIdentity(client_id: string): Promise<any> {
   const authorizationUrlSearchParams = new URLSearchParams({
     client_id: client_id,
     state,
-    scope: "read:user, user:email",
+    // scope: "read:user, user:email",
   });
   const authorizationUrl = `https://github.com/login/oauth/authorize?${authorizationUrlSearchParams}`;
   const headers = new Headers();
@@ -116,7 +116,12 @@ export async function getUser(accessToken) {
     } else {
       useremail = user.email;
     }
-    return useremail;
+
+    const userData = {
+      email: useremail,
+      username: user.login,
+    };
+    return userData;
   } catch (error) {
     return new Response(null, {
       status: 400

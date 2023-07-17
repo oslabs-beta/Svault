@@ -96,9 +96,10 @@ export async function getUser(accessToken) {
     }
 
     const data = await response.json();
-    // console.log(data.email);
-
-    return data.email;
+    const userData = {
+      username: data.email,
+    };
+    return userData;
   } catch (error) {
     return new Response(null, {
       status: 400
