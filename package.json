@@ -1,6 +1,6 @@
 {
 	"name": "svault",
-	"version": "1.0.0",
+	"version": "1.1.0",
 	"description": "Authentication library for SvelteKit",
 	"keywords": [
 		"Svelte",
@@ -69,7 +69,6 @@
 		"@typescript-eslint/parser": "^5.45.0",
 		"eslint": "^8.28.0",
 		"eslint-plugin-svelte": "^2.30.0",
-		"google-auth-library": "^8.9.0",
 		"publint": "^0.1.9",
 		"svelte": "^4.0.0",
 		"svelte-check": "^3.4.3",
@@ -85,6 +84,7 @@
 		"bcryptjs": "^2.4.3",
 		"cookie": "^0.5.0",
 		"dotenv": "^16.3.1",
+		"google-auth-library": "^8.9.0",
 		"nanoid": "^4.0.2",
 		"pg": "^8.11.1",
 		"process": "^0.11.10"

@@ -10,7 +10,8 @@
     "sourceMap": true,
     "strict": true,
     "moduleResolution": "NodeNext",
-    "allowImportingTsExtensions": true
+    "allowImportingTsExtensions": true,
+    "outDir": "./dist",
   },
   "exclude": ["node_modules", "typings"]
 }

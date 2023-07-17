@@ -26,7 +26,9 @@ export const oauth = SvaultOauth({ providers });
 //svault native handler
 export const native = SvaultNative(redirectPath);
 
+// svault oauth and native handler
 export const handle = sequence(oauth, native);
+
 
 
 
