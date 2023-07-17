@@ -122,7 +122,7 @@ export const login = async (event, redirect: string) => {
     const password = data.get('password')?.toString();
     let goodUser: boolean;
     goodUser = true;
-    const header = new Headers();
+    let header = new Headers();
     let errorMessage: string;
     
     if (username && password) {
