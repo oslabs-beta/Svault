@@ -133,9 +133,10 @@ GOOGLE_CLIENT_SECRET = YOURSECRETHERE
   <GoogleButton />
   <DiscordButton />
 ```
-<div align="center">
-The buttons will render as shown below:
 
+<div align="center">
+The buttons will render as shown below:  
+<br>
 <img src="OAuthButtonsSS.png" width="50%" />
 
 </div>
@@ -218,9 +219,11 @@ MAX_AGE = Date.now() + {someNumberHere} * {someNumberHere}
     - Upon registering, the user will be added to the database with the username and a secure hashed password.
     - On login, the user will be authenticated through your database.
         - A browser cookie will be created as well as a session in local memory storage called "svault-auth".  
+        
         <div align="center">
         <img src="cookiepicture.png">
         </div>
+        
         - The session will have an expiration time determined in your `.env` file.
         - Sessions will automatically be cleaned and deleted upon expiration.
     - On logout, the user will be redirected to the home page, the cookie will be deleted from the browser, and the session will be deleted from local memory store.
