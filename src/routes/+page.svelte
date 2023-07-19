@@ -49,7 +49,15 @@
     </div>
   </nav>
 </header>
-<GithubButton />
-<GoogleButton />
-<DiscordButton />
+<div class="btn">
+  <GithubButton />
+  <GoogleButton />
+  <DiscordButton />
+</div>
 <slot />
+<style>
+  .btn {
+    display: flex;
+    flex-direction: column;
+  }
+</style>
