@@ -53,7 +53,6 @@ export async function checkUserCredentials(
     } else {
       //this means the username doesn't exist in the db but dont tell the client that
       // spend some time to "waste" some time, this makes brute forcing harder
-      //console.log('username does not exist');
       await bcrypt.hash(password, workFactor);
       return false;
     }

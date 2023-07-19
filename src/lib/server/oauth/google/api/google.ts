@@ -29,7 +29,7 @@ export const google = (clientId, clientSecret, redirectPath, callbackurl) => {
 export function getGoogleIdentity(client_id: string, client_secret: string, callbackurl): Promise<any> {
   const state = nanoid();
   const cookieHeader = `google_oauth_state=${state}; HttpOnly; Max-Age=3600; Path=/`;
-  const redirectURL = callbackurl
+  const redirectURL = callbackurl;
 
   const oAuth2Client = new OAuth2Client(
     client_id,

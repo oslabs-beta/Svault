@@ -1,10 +1,8 @@
 import { nanoid } from 'nanoid';
 
-//TODO cleanup code
-
 //Custom hanndle hook for github to authenticate, validate, redirect, and return the github user email
 //Set github callback URL to /oauth/api/validate
-// let userMain;
+
 export const github = (clientId, clientSecret, redirectPath) => {
   return {
     name: 'github',
@@ -33,7 +31,6 @@ export function getGitHubIdentity(client_id: string): Promise<any> {
   const authorizationUrlSearchParams = new URLSearchParams({
     client_id: client_id,
     state,
-    // scope: "read:user, user:email",
   });
   const authorizationUrl = `https://github.com/login/oauth/authorize?${authorizationUrlSearchParams}`;
   const headers = new Headers();
@@ -41,7 +38,6 @@ export function getGitHubIdentity(client_id: string): Promise<any> {
   headers.append('Location', authorizationUrl);
   return headers;
 }
-
 
 //check state cookie and fetch access token
 export async function getGitHubValidation(client_id: string, client_secret: string, event) {

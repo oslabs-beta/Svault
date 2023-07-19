@@ -1,36 +1,45 @@
 {
 	"name": "svault",
-	"version": "1.1.0",
+	"version": "1.0.0",
 	"description": "Authentication library for SvelteKit",
 	"keywords": [
-		"Svelte",
-		"SvelteKit"
+		"svelte",
+		"sveltekit",
+		"svault",
+		"authentication",
+		"library",
+		"oauth",
+		"auth",
+		"user management"
 	],
-	"homepage": "https://placeholderurl.com",
-	"license": "dummy name license",
+	"homepage": "https://svault.dev",
+	"license": "MIT",
+	"bugs": {
+		"url": "https://github.com/oslabs-beta/Svault/issues"
+	},
 	"author": {
-		"name": "Team Espeon",
+		"name": "Team Svault",
 		"url": "https://github.com/oslabs-beta/Svault"
 	},
 	"contributors": [
 		{
-			"name": "Daniel",
+			"name": "Daniel Park",
 			"url": "https://github.com/parkdaniel731"
 		},
 		{
-			"name": "Michelle",
+			"name": "Michelle Conroy",
 			"url": "https://github.com/missmshel"
 		},
 		{
-			"name": "Michael",
+			"name": "Michael Buenrostro",
 			"url": "https://github.com/mbuenrostro21"
 		},
 		{
-			"name": "Franki",
+			"name": "Franki Biswas",
 			"url": "https://github.com/fpena213"
 		},
 		{
-			"name": "Tristan",
+			"name": "Tristan Bott",
 			"url": "https://github.com/trisbt"
 		}
 	],

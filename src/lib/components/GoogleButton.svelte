@@ -1,7 +1,5 @@
 <script></script>
 <button type="button" class="login-with-google-btn" >
-
-      <!-- <img src="src/lib/assets/googlelogo.png" alt=""> -->
       <a class="btn-text" href="/oauth/google/auth">
         Sign in with Google
       </a>

@@ -48,12 +48,11 @@ export async function getDiscordValidation(client_id: string, client_secret: str
         });
     }
     const code = event.url.searchParams.get("code");
-    if (!code) {
-        return new Response(null, {
+ if (!code) {
+      return new Response(null, {
             status: 400,
         });
     }
-    // console.log(code)
     const response = await fetch("https://discord.com/api/oauth2/token", {
         method: "POST",
         body: new URLSearchParams({
@@ -82,27 +81,27 @@ export async function getDiscordValidation(client_id: string, client_secret: str
 
 export async function getUser(accessToken) {
     try {
-      const response = await fetch('https://discord.com/api/users/@me', {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      });
-  
-      if (!response.ok) {
-        throw new Error('Failed to fetch user information.');
-      }
-  
-      const data = await response.json();
- 
-      const userData = {
-        email: data.email,
-        username: data.username,
-      };
-    
-      return userData;
+        const response = await fetch('https://discord.com/api/users/@me', {
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+            },
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to fetch user information.');
+        }
+
+        const data = await response.json();
+
+        const userData = {
+            email: data.email,
+            username: data.username,
+        };
+
+        return userData;
     } catch (error) {
-      return new Response(null, {
-        status: 400
-      });
+        return new Response(null, {
+            status: 400
+        });
     }
 }

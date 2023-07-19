@@ -9,13 +9,12 @@ import { MAX_AGE } from '$env/static/private';
 
 let checkUserStatus: boolean;
 
-export const SvaultNative = (redirect: string) => {
-    return async ({ event, resolve }) => {
-        if (event.url.pathname.startsWith('/')) {
-            console.log("checkUserStatus", checkUserStatus)
-            if(checkUserStatus === false) {
-                 event.locals.failure = "Invalid username or password";
-            }else{
+export const SvaultNative: Handle = (redirect: string) => {
+  return async ({ event, resolve }) => {
+      if (event.url.pathname.startsWith('/')) {
+          if (checkUserStatus === false) {
+                event.locals.failure = "Invalid username or password";
+            } else {
                 checkUserStatus = true;
             }
             //grab the session ID from the cookie, and get the session data for it
@@ -26,36 +25,24 @@ export const SvaultNative = (redirect: string) => {
                 if (session) {
                     //sends username back to frontend to be used on the landing page
                     event.locals.username = session.username;
-                    //event.locals.failure = "Placeholder"
                     //TODO: send session info back
                     //event.locals.session = session;
-                    //console.log('event locals session', event.locals.session)
                     //TODO/ITERATION: user roles on site 
                     // event.locals.roles = session.roles;
                 } else {
                     // remove invalid/expired/unknown cookies
                     cookies.delete('svault_auth');
-
                 }
             }
         }
         if (event.url.pathname === '/loginValidate') {
             const { goodUser, header } = await login(event, redirect);
             // const result = await login(event, redirect);
-            // console.log('result is', result, typeof result)
-            //if (result.ActionFailure.errorMessage)
             if (goodUser === true) {
                 checkUserStatus = true;
                 return new Response('Redirect', { status: 303, headers: header });
             } else {
-                //return fail(400, { errorMessage: 'Missing username or password' })
-                //console.log(header.get('fail'))
-                //return the header with the 'fail' property
-                // event.locals.failure = header.get('fail');
                 checkUserStatus = false;
-                // const fail = header.get('fail');
-                // alert('wrong password');
-                // throw Error(302, 'Invalid password');
                 return new Response(null, { status: 302, headers: header })
             }
         }
@@ -124,22 +111,14 @@ export const login = async (event, redirect: string) => {
     goodUser = true;
     let header = new Headers();
     let errorMessage: string;
-    
+
     if (username && password) {
         //checks username/password in database
         const response = await checkUserCredentials(username, password);
         if (response === false) {
-            goodUser = false;   
+            goodUser = false;
             errorMessage = 'Invalid username or password';
         }
-
-        // // OLD VERSION
-        // await checkUserCredentials(username, password).then((res) => {
-        //     //could not RETURN out of this await statement, needed to go in outer scope, so we declare goodUser as false here and throw the fail() outside of await statement
-        //     if (res === false) {
-        //         goodUser = false;
-        //     }
-        // });
     } else {
         //if someone logs in without a username or password
         //should never happen because they are required form data points in page.svelte
