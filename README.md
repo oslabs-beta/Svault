@@ -6,7 +6,7 @@
 
 # Authentication for SvelteKit
 
-Svault is an authentication library for easily deploying authentication into your SvelteKit application. Svault supports both native username/password authentication as well as OAuth.
+Svault is an authentication, authorization, and user management library for Svelte/SvelteKit applications. Svault supports both native username/password authentication as well as OAuth.
 
 ![NPM Downloads](https://img.shields.io/npm/dt/svault?color=%23fb7182&label=downloads)
 ![GitHub Stars](https://img.shields.io/github/stars/oslabs-beta/svault?color=%23fb7182)
@@ -24,16 +24,17 @@ Svault is an authentication library for easily deploying authentication into you
 
 - Svault is an open-source developer library that simplifies the authentication process in SvelteKit projects.
 - Svault is flexible and lightweight, and allows the developer to decide which authentication types they would like to deploy in their application.
-- With native username/password authentication, implementing registration and login functionality has never been easier. Cookies and sessions are automatically created and deleted upon logout or expiration.
-- Svault also supports OAuth with a number of providers. Currently, Svault offers easy setup with Google, Github, and Discord, with more providers to come.
-- Currently, Svault's database adapter connects to the developer's SQL database, with additional database functionality in the works.
+- With native username/password authentication, implementing registration and login functionality have never been easier. Cookies and sessions are automatically created and deleted upon logout or expiration.
+- Svault also supports OAuth with a number of providers. Currently, it offers easy setup with Google, Github, and Discord, with more providers to come.
+- Bonus: Svault provides premade component buttons for implementing OAuth!
+- Currently, Svault's database adapter connects to the developer's PostgreSQL database, with additional database functionality in the works.
 
 ## Demo
 ***Gif or video here***
 
 ## Installation
 
-1. Navigate to your SvelteKit project directory on the command line
+1. Navigate to your SvelteKit project directory in the command line.
 2. Run:
 ```bash
 npm install svault
@@ -83,7 +84,7 @@ const providers = [
 // Svault Oauth handler
 export const handle = SvaultOauth({ providers });
 ```
-3. Create an `.env` file in the root level of your project and define your client ID and secret as variables. Example:
+3. Create an `.env` file at the root level of your project and define your client ID and secret as variables. Example:
 ```TypeScript
 // Paste if using Discord Oauth
 DISCORD_CLIENT_ID = YOURIDHERE
@@ -97,7 +98,9 @@ GITHUB_CLIENT_SECRET = YOURSECRETHERE
 GOOGLE_CLIENT_ID = YOURIDHERE
 GOOGLE_CLIENT_SECRET = YOURSECRETHERE
 ```
-4. In your `+page.svelte` file that has your login page:
+4. In your `+page.svelte` file that has your login page, choose between the following options:
+
+    a. Design your own OAuth button
     - Create a button or component for each provider you want to use, that will route to an endpoint of `/oauth/[provider-name-here]/auth`
     - Make sure to include an anchor tag within the button and/or component.
 ```TypeScript
@@ -115,9 +118,33 @@ GOOGLE_CLIENT_SECRET = YOURSECRETHERE
     <a href="/oauth/discord/auth">Discord</a>
 </button>
 ```
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;b. Optionally, import one of Svault's premade OAuth component buttons!
+
+```TypeScript
+// Example +page.svelte file for github authentication
+  <script>
+  import GithubButton from 'svault';
+  import GoogleButton from 'svault';
+  import DiscordButton from 'svault';
+  </script>
+
+  <GithubButton />
+  <GoogleButton />
+  <DiscordButton />
+```
+<div align="center">
+The buttons will render as shown below:
+
+<img src="OAuthButtonsSS.png" width="50%" />
+
+</div>
+
+
+
 5. And you're good to go!
 
-*Note: OAuth providers are not set up to store any data in a database in this current iteration of Svault*
+*Note: OAuth providers are not set up to store any data in a database in this current iteration of Svault.*
 
 <br>
 
@@ -137,7 +164,7 @@ export const handle = SvaultNative(redirectPath);
 ```
 2. Create a PostgreSQL table with the following columns:
 ```SQL
-CREATE_TABLE table_name (
+CREATE_TABLE [YOURTABLENAME] (
     username VARCHAR NOT NULL,
     password VARCHAR NOT NULL,
 )
@@ -171,14 +198,13 @@ CREATE_TABLE table_name (
   </form>
 ```
 ```TypeScript
-// To implement logout functionality, 
-// Create a button or anchor tag in your page.svelte that redirects to '/logout'
+// To implement logout functionality, create a button or anchor tag in your page.svelte that redirects to '/logout'
 
 <button>
     <a href="/logout">Logout</a>
 </button>
 ```
-3. Create an `.env` file that takes in your database URI and user table name
+3. In your `.env` file (create if you haven't done so) that takes in your database URI and user table name
 ```TypeScript
 // Paste if using native authentication with a PostgreSQL database
 PG_URI = YOURDATABASEURI
@@ -189,16 +215,17 @@ MAX_AGE = Date.now() + {someNumberHere} * {someNumberHere}
 // ex. Date.now() + 1000 * 60 * 60 --> session will last for 1 hour
 ```
 4. After submitting the form, the user will be redirected to the endpoint of your choice.
-    - On register, the user will be added to the database with the username and a secure hashed password.
+    - Upon registering, the user will be added to the database with the username and a secure hashed password.
     - On login, the user will be authenticated through your database.
-        - A browser cookie will be created as well as a session in local memory storage called "svault-auth"  
-        ***$$$SHOW COOKIE PICTURE HERE$$$***
-        - The session will have an expiration time determined in your .ENV file
-        - Sessions will automatically be cleaned and deleted upon expiration
-    - On logout, the user will be redirectted to the home page, the cookie will be deleted from the browser, and the session will be deleted from local memory store.
+        - A browser cookie will be created as well as a session in local memory storage called "svault-auth".  
+        <img src="cookiepicture.png">
+        - The session will have an expiration time determined in your `.env` file.
+        - Sessions will automatically be cleaned and deleted upon expiration.
+    - On logout, the user will be redirected to the home page, the cookie will be deleted from the browser, and the session will be deleted from local memory store.
 5. And you're good to go!
 
 <br>
+
 
 ### Using Both Native Authentication and OAuth
 1. To implement native authentication and OAuth, you can use SvelteKit's <a href=https://kit.svelte.dev/docs/modules#sveltejs-kit-hooks-sequence>Sequence</a> helper function.
@@ -224,7 +251,7 @@ export const handle = sequence(oauth, native);
 
 ### Serving Data Client-Side
 - Svault automatically sends back authentication information to the frontend via the `event.locals` object. This allows you to display any necessary information you would like, client-side.
-    - If you would like to display the user’s username on the page, simply load `event.locals.username` in your `+layout.svelte`, and then call it on your `+page.svelte`.
+    - If you would like to display the user’s username on the page, simply load `event.locals.username` in your `+layout.server.ts`, and then call it on your `+page.svelte`.
     - If you would like to display an appropriate error message upon incorrect login, the error will be returned back to the client side on the `event.locals.failure` object.
 - See example below:
 ```TypeScript
@@ -261,15 +288,16 @@ export const load = (async ({ locals }) => {
 <br>
 
 ## Roadmap
-Svault is an amazing project with many areas for iteration. Here are some of ideas to add and improve our features:
+Svault is an amazing project with many areas for iteration. Here are some of the ideas to add and improve our features:
 - Implement long term storage for OAuth users in the database
 - Add more OAuth providers! (Facebook, Reddit, Twitter...)
 - Change session cache to Redis rather than in-memory store
 - Create a My Profile page that displays after a user has been authenticated
 - Add additional DB adapters- MySQL, MongoDB, etc.
-- Add authorization and roles to different users
+- Add access authorization and roles to different users
 - Complete frontend sessions logic in browser
 - Create testing suites
+- Add UI components for login, making it a one-stop-shop
 - Refactor the TypeScript code and define correct typings/interfaces
 
 
