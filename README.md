@@ -1,8 +1,6 @@
 <div align="center">
 
 ![banner](https://i.imgur.com/djX1j8N.png)
-<!-- <img src="./src/lib/assets/svault-logo.png" /> -->
-<!-- <img src="https://i.imgur.com/djX1j8N.png" /> -->
 
 <br>
 
@@ -41,9 +39,8 @@ Svault is an authentication library for easily deploying authentication into you
 npm install svault
 ```
 
-<br>
 
-### Implementing OAuth in your application
+### Implementing OAuth in Your Application
 
 1. When registering your application for OAuth set your callback url to match this format `/oauth/[provider]/validate`.
 
@@ -62,18 +59,18 @@ import { GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET } from '$env/static/private';
 import { google } from 'svault';
 import { GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET } from '$env/static/private';
 // Google callback urls have to match the callback url you setup in your development app so paste it here to pass into the Oauth function
-const googleCallback = 'http://localhost:5173/oauth/google/validate'
+const googleCallback = 'http://localhost:5173/oauth/google/validate';
 
 
 // Import if you would like to use Discord Oauth
 import { discord } from 'svault';
 import { DISCORD_CLIENT_ID, DISCORD_CLIENT_SECRET } from "$env/static/private";
 // Discord callback urls have to match the callback url you setup in your development app so paste it here to pass into the Oauth function
-const discordCallback = 'http://localhost:5173/oauth/discord/validate'
+const discordCallback = 'http://localhost:5173/oauth/discord/validate';
 
 
 // Set redirect path to your desired endpoint upon user login
-const redirectPath = '/(yourPathHere)' //ex. 'const redirectPath = '/redirectPage'
+const redirectPath = '/(yourPathHere)'; //ex. 'const redirectPath = '/redirectPage'
 
 
 // Place the Oauth providers here
@@ -81,7 +78,7 @@ const providers = [
     github(GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET, redirectPath),
     google(GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, redirectPath, googleCallback),
     discord(DISCORD_CLIENT_ID, DISCORD_CLIENT_SECRET, redirectPath, discordCallback)
-  ];
+];
 
 // Svault Oauth handler
 export const handle = SvaultOauth({ providers });
@@ -89,16 +86,16 @@ export const handle = SvaultOauth({ providers });
 3. Create an `.env` file in the root level of your project and define your client ID and secret as variables. Example:
 ```TypeScript
 // Paste if using Discord Oauth
-DISCORD_CLIENT_ID= YOURIDHERE
-DISCORD_CLIENT_SECRET= YOURSECRETHERE
+DISCORD_CLIENT_ID = YOURIDHERE
+DISCORD_CLIENT_SECRET = YOURSECRETHERE
 
 // Paste if using Github Oauth
-GITHUB_CLIENT_ID= YOURIDHERE
-GITHUB_CLIENT_SECRET= YOURSECRETHERE
+GITHUB_CLIENT_ID = YOURIDHERE
+GITHUB_CLIENT_SECRET = YOURSECRETHERE
 
 // Paste if using Google Oauth
-GOOGLE_CLIENT_ID= YOURIDHERE
-GOOGLE_CLIENT_SECRET= YOURSECRETHERE
+GOOGLE_CLIENT_ID = YOURIDHERE
+GOOGLE_CLIENT_SECRET = YOURSECRETHERE
 ```
 4. In your `+page.svelte` file that has your login page:
     - Create a button or component for each provider you want to use, that will route to an endpoint of `/oauth/[provider-name-here]/auth`
@@ -132,7 +129,7 @@ import { SvaultNative } from 'svault';
 
 
 // Set redirect path to your desired endpoint upon user login
-const redirectPath = '/[yourPathHere]' //ex. 'const redirectPath = '/homepage'
+const redirectPath = '/[yourPathHere]'; //ex. 'const redirectPath = '/homepage'
 
 
 // Svault native handler
@@ -184,11 +181,11 @@ CREATE_TABLE table_name (
 3. Create an `.env` file that takes in your database URI and user table name
 ```TypeScript
 // Paste if using native authentication with a PostgreSQL database
-PG_URI= YOURDATABASEURI
-TABLE_NAME= YOURTABLENAME //ex. TABLE_NAME = users
+PG_URI = YOURDATABASEURI
+TABLE_NAME = YOURTABLENAME //ex. TABLE_NAME = users
 
 //MAX_AGE will determine the expiration time of the user's session
-MAX_AGE= Date.now() + {someNumberHere} * {someNumberHere}
+MAX_AGE = Date.now() + {someNumberHere} * {someNumberHere}
 // ex. Date.now() + 1000 * 60 * 60 --> session will last for 1 hour
 ```
 4. After submitting the form, the user will be redirected to the endpoint of your choice.
@@ -200,7 +197,6 @@ MAX_AGE= Date.now() + {someNumberHere} * {someNumberHere}
         - Sessions will automatically be cleaned and deleted upon expiration
     - On logout, the user will be redirectted to the home page, the cookie will be deleted from the browser, and the session will be deleted from local memory store.
 5. And you're good to go!
-
 
 <br>
 
@@ -248,8 +244,10 @@ export const load = (async ({ locals }) => {
 {#if data.username}
         <a
           href="/logout"
-          data-sveltekit-reload>Hello {data.username}, Log out
-				</a>
+          data-sveltekit-reload
+        >
+            Hello {data.username}, Log out
+        </a>
 {:else}
 
 <!-- displays error message if login is unsuccessful -->
@@ -261,7 +259,6 @@ export const load = (async ({ locals }) => {
 ```
 
 <br>
-
 
 ## Roadmap
 Svault is an amazing project with many areas for iteration. Here are some of ideas to add and improve our features:
@@ -275,28 +272,25 @@ Svault is an amazing project with many areas for iteration. Here are some of ide
 - Create testing suites
 - Refactor the TypeScript code and define correct typings/interfaces
 
-<br>
 
 ## How to Contribute
 1. Fork this repo and clone from your forked repo onto your machine.
-2. Create a new branch that details what feature is being developed
-3. Commit and push changes to your forked repository
+2. Create a new branch that details what feature is being developed.
+3. Commit and push changes to your forked repository.
 4. Submit a Pull Request from your forked remote branch into the Svault repo.
 
-<br>
 
 ## The Svault Team
 Franki Biswas <a href="https://github.com/fpena213">Github</a> | <a href="https://www.linkedin.com/in/franki-biswas/">LinkedIn</a>
 
 Tristan Bott <a href="https://github.com/trisbt">Github</a> | <a href="https://www.linkedin.com/in/tristan-bott/">LinkedIn</a>
 
-Michael Buenrostro <a href="https://github.com/mbuenrostro21">Github</a> | <a href="www.linkedin.com/in/michael-buenrostro">LinkedIn</a>
+Michael Buenrostro <a href="https://github.com/mbuenrostro21">Github</a> | <a href="https://www.linkedin.com/in/michael-buenrostro/">LinkedIn</a>
 
-Michelle Conroy <a href="https://github.com/missmshel">Github</a> | <a href="linkedin.com/in/michelle-conroy-00396838">LinkedIn</a>
+Michelle Conroy <a href="https://github.com/missmshel">Github</a> | <a href="https://www.linkedin.com/in/michelleaconroy">LinkedIn</a>
 
 Daniel Park <a href="https://github.com/parkdaniel731">Github</a> | <a href="https://www.linkedin.com/in/danielpark137/">LinkedIn</a>
 
-<br>
 
 ## Credits
 Inspired by <a href="https://lucia-auth.com/">Lucia</a> and <a href="https://authjs.dev/">Auth.js</a>, Svault expands the authentication tools available to Svelte/SvelteKit developers.
