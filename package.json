@@ -3,34 +3,43 @@
 	"version": "1.0.0",
 	"description": "Authentication library for SvelteKit",
 	"keywords": [
-		"Svelte",
-		"SvelteKit"
+		"svelte",
+		"sveltekit",
+		"svault",
+		"authentication",
+		"library",
+		"oauth",
+		"auth",
+		"user management"
 	],
-	"homepage": "https://placeholderurl.com",
-	"license": "dummy name license",
+	"homepage": "https://svault.dev",
+	"license": "MIT",
+	"bugs": {
+		"url": "https://github.com/oslabs-beta/Svault/issues"
+	},
 	"author": {
-		"name": "Team Espeon",
+		"name": "Team Svault",
 		"url": "https://github.com/oslabs-beta/Svault"
 	},
 	"contributors": [
 		{
-			"name": "Daniel",
+			"name": "Daniel Park",
 			"url": "https://github.com/parkdaniel731"
 		},
 		{
-			"name": "Michelle",
+			"name": "Michelle Conroy",
 			"url": "https://github.com/missmshel"
 		},
 		{
-			"name": "Michael",
+			"name": "Michael Buenrostro",
 			"url": "https://github.com/mbuenrostro21"
 		},
 		{
-			"name": "Franki",
+			"name": "Franki Biswas",
 			"url": "https://github.com/fpena213"
 		},
 		{
-			"name": "Tristan",
+			"name": "Tristan Bott",
 			"url": "https://github.com/trisbt"
 		}
 	],
@@ -69,7 +78,6 @@
 		"@typescript-eslint/parser": "^5.45.0",
 		"eslint": "^8.28.0",
 		"eslint-plugin-svelte": "^2.30.0",
-		"google-auth-library": "^8.9.0",
 		"publint": "^0.1.9",
 		"svelte": "^4.0.0",
 		"svelte-check": "^3.4.3",
@@ -83,7 +91,9 @@
 	"dependencies": {
 		"bcrypt": "^5.0.1",
 		"bcryptjs": "^2.4.3",
+		"cookie": "^0.5.0",
 		"dotenv": "^16.3.1",
+		"google-auth-library": "^8.9.0",
 		"nanoid": "^4.0.2",
 		"pg": "^8.11.1",
 		"process": "^0.11.10"

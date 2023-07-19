@@ -1,8 +1,9 @@
 export type SessionInfo = {
     username: string;
-    //roles: string[];
+    // // TODO/ITERATION: add 'roles' for authorization
+      //roles: string[];
   };
   
-  export type SessionInfoCache = SessionInfo & {
-    invalidAt: number;
-  };
+export type SessionInfoCache = SessionInfo & {
+  invalidAt: number;
+};

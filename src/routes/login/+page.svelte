@@ -1,23 +1,42 @@
+<!-- used for development testing -->
+
 <script lang="ts">
-    //still need to create this
-    import type { ActionData } from './$types.js';
+	import type { LayoutServerData } from "./$types";
 
-    // receive form data from server
-    export let form: ActionData;
-  </script>
-  
-  <div class="container">
-    <h1 class="is-size-3 has-text-weight-semibold my-4">Login or Register</h1>
-    <form method="post">
-      <input class="input my-2" type="text" placeholder="Username" name="username" required />
-      <input class="input my-2" type="password" placeholder="Password" name="password" required />
+	export let data: LayoutServerData;
+</script>
 
-      <!-- display error message, if errorMessage is thrown by fail() function in src/routes/login/+page.server.ts-->
-      {#if form?.errorMessage}
-        <div class="has-text-danger my-2">{form.errorMessage}</div>
-      {/if}
-  
-      <button class="button mt-4 mr-3" type="submit" formaction="?/register">Register</button>
-      <button class="button is-primary mt-4" type="submit" formaction="?/login">Login</button>
-    </form>
-  </div>
+<div>
+	<h1>Login or Register</h1>
+	<form method="POST">
+		<input
+		type="text"
+		placeholder="Username"
+		name="username"
+		required
+		/>
+		<input
+		type="password"
+		placeholder="Password"
+		name="password"
+		required
+		/>
+		
+		<!-- display error message, if errorMessage is thrown by function in src/lib/login/nativeAuth.ts-->
+		<!-- TODO: have failure errorMessage be dynamic, currently will only be "Invalid username or password"-->
+		<!-- TODO: change the div that pops up on invalid login to utilize the "fail" functionality that sveltekit provides -->
+		{#if data.failure}
+			<div>{data.failure}</div>
+		{/if}
+		
+		<button
+			type="submit"
+			formaction="/registerValidate">Register</button
+		>
+		<button		
+			type="submit"
+			formaction="/loginValidate">Login</button
+		>
+	</form>
+</div>
+<slot />
