@@ -1,23 +1,47 @@
 {
 	"name": "svault",
-	"version": "1.0.0",
+	"version": "1.1.1",
 	"description": "Authentication library for SvelteKit",
 	"keywords": [
-		"Svelte",
-		"SvelteKit"
+		"svelte",
+		"sveltekit",
+		"svault",
+		"authentication",
+		"library",
+		"oauth",
+		"auth",
+		"user management"
 	],
-	"homepage": "https://placeholderurl.com",
-	"license": "dummy name license",
+	"homepage": "https://svault.dev",
+	"license": "MIT",
+	"bugs": {
+		"url": "https://github.com/oslabs-beta/Svault/issues"
+	},
 	"author": {
-		"name": "Team Espeon",
+		"name": "Team Svault",
 		"url": "https://github.com/oslabs-beta/Svault"
 	},
 	"contributors": [
-		{"name": "Daniel", "url": "https://github.com/parkdaniel731"},
-		{"name": "Michelle", "url": "https://github.com/missmshel"},
-		{"name": "Michael", "url": "https://github.com/mbuenrostro21"},
-		{"name": "Franki", "url": "https://github.com/fpena213"},
-		{"name": "Tristan", "url": "https://github.com/trisbt"}
+		{
+			"name": "Daniel Park",
+			"url": "https://github.com/parkdaniel731"
+		},
+		{
+			"name": "Michelle Conroy",
+			"url": "https://github.com/missmshel"
+		},
+		{
+			"name": "Michael Buenrostro",
+			"url": "https://github.com/mbuenrostro21"
+		},
+		{
+			"name": "Franki Biswas",
+			"url": "https://github.com/fpena213"
+		},
+		{
+			"name": "Tristan Bott",
+			"url": "https://github.com/trisbt"
+		}
 	],
 	"repository": "https://github.com/oslabs-beta/Svault",
 	"scripts": {
@@ -48,6 +72,8 @@
 		"@sveltejs/adapter-auto": "^2.0.0",
 		"@sveltejs/kit": "^1.20.4",
 		"@sveltejs/package": "^2.0.0",
+		"@types/bcrypt": "^5.0.0",
+		"@types/pg": "^8.10.2",
 		"@typescript-eslint/eslint-plugin": "^5.45.0",
 		"@typescript-eslint/parser": "^5.45.0",
 		"eslint": "^8.28.0",
@@ -61,5 +87,15 @@
 	},
 	"svelte": "./dist/index.js",
 	"types": "./dist/index.d.ts",
-	"type": "module"
+	"type": "module",
+	"dependencies": {
+		"bcrypt": "^5.0.1",
+		"bcryptjs": "^2.4.3",
+		"cookie": "^0.5.0",
+		"dotenv": "^16.3.1",
+		"google-auth-library": "^8.9.0",
+		"nanoid": "^4.0.2",
+		"pg": "^8.11.1",
+		"process": "^0.11.10"
+	}
 }
