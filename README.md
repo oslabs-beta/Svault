@@ -14,7 +14,7 @@ Svault is an authentication, authorization, and user management library for Svel
 ![NPM Version](https://img.shields.io/npm/v/svault?color=%23fb7182&label=version)
 ![MIT License](https://img.shields.io/badge/license-MIT-%23fb7182)
 
-[🔐 Website](https://svault.dev) | [📚 Documentation](https://svault.mintlify.app) | [⌨️ Blog](https://medium.com/@mshelconroy/6390c8da15d5?source=friends_link&sk=a731a9503c34d4c51f673e276517e2cf) | [💼 LinkedIn](https://www.linkedin.com/company/svault/)
+[🔐 Website](https://svault.dev) | [📚 Documentation](https://svault.mintlify.app) | [⌨️ Blog](https://medium.com/@mshelconroy/svault-the-spanish-fly-of-svelte-security) | [💼 LinkedIn](https://www.linkedin.com/company/svault/)
 
 </div>
 
