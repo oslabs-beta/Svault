@@ -26,7 +26,6 @@ Svault is an authentication, authorization, and user management library for Svel
 - Svault is flexible and lightweight, and allows the developer to decide which authentication types they would like to deploy in their application.
 - With native username/password authentication, implementing registration and login functionality have never been easier. Cookies and sessions are automatically created and deleted upon logout or expiration.
 - Svault also supports OAuth with a number of providers. Currently, it offers easy setup with Google, Github, and Discord, with more providers to come.
-- Bonus: Svault provides premade component buttons for implementing OAuth!
 - Currently, Svault's database adapter connects to the developer's PostgreSQL database, with additional database functionality in the works.
 
 ## Demo
@@ -98,9 +97,8 @@ GITHUB_CLIENT_SECRET = YOURSECRETHERE
 GOOGLE_CLIENT_ID = YOURIDHERE
 GOOGLE_CLIENT_SECRET = YOURSECRETHERE
 ```
-4. In your `+page.svelte` file that has your login page, choose between the following options:
+4. In your `+page.svelte` file that has your login page:
 
-    a. Design your own OAuth button
     - Create a button or component for each provider you want to use, that will route to an endpoint of `/oauth/[provider-name-here]/auth`
     - Make sure to include an anchor tag within the button and/or component.
 ```TypeScript
@@ -118,28 +116,6 @@ GOOGLE_CLIENT_SECRET = YOURSECRETHERE
     <a href="/oauth/discord/auth">Discord</a>
 </button>
 ```
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;b. Optionally, import one of Svault's premade OAuth component buttons!
-
-```TypeScript
-// Example +page.svelte file for github authentication
-  <script>
-  import GithubButton from 'svault';
-  import GoogleButton from 'svault';
-  import DiscordButton from 'svault';
-  </script>
-
-  <GithubButton />
-  <GoogleButton />
-  <DiscordButton />
-```
-
-<div align="center">
-The buttons will render as shown below:  
-<br>
-<img src="OAuthButtonsSS.png" width="50%" />
-
-</div>
 
 
 
