@@ -145,9 +145,9 @@ export const handle = SvaultNative(redirectPath);
 ```
 2. Create a PostgreSQL table with the following columns:
 ```SQL
-CREATE_TABLE [YOURTABLENAME] (
+CREATE TABLE [YOURTABLENAME] (
     username VARCHAR NOT NULL,
-    password VARCHAR NOT NULL,
+    password VARCHAR NOT NULL
 )
 ```
 3. In your `routes` directory, create a route called `login`. In your login `+page.svelte`, create form elements for taking in username and password inputs. Create buttons for login and register.
