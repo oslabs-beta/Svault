@@ -29,7 +29,8 @@ Svault is an authentication, authorization, and user management library for Svel
 - Currently, Svault's database adapter connects to the developer's PostgreSQL database, with additional database functionality in the works.
 
 ## Demo
-***Gif or video here***
+<video src="./static/Demo.mov" controls="controls" style="max-width: 95%;">
+</video>
 
 ## Installation
 
