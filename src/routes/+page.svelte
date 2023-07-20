@@ -10,9 +10,6 @@
   //   setBrowserSession(username, sid)
   // })
 
-  import GithubButton from "$lib/components/GithubButton.svelte";
-  import GoogleButton from "$lib/components/GoogleButton.svelte";
-  import DiscordButton from "$lib/components/DiscordButton.svelte";
   export let data: LayoutServerData;
 </script>
 
@@ -41,16 +38,8 @@
     </div>
   </nav>
 </header>
-<div class="btn">
-  <GithubButton />
-  <GoogleButton />
-  <DiscordButton />
-</div>
+
 <slot />
 
 <style>
-  .btn {
-    display: flex;
-    flex-direction: column;
-  }
 </style>
