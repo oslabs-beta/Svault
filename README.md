@@ -205,7 +205,7 @@ CREATE_TABLE [YOURTABLENAME] (
     <a href="/logout">Logout</a>
 </button>
 ```
-3. In your `.env` file (create if you haven't done so) that takes in your database URI and user table name
+4. In your `.env` file (create if you haven't done so) that takes in your database URI and user table name
 ```TypeScript
 // Paste if using native authentication with a PostgreSQL database
 PG_URI = YOURDATABASEURI
@@ -215,7 +215,7 @@ TABLE_NAME = YOURTABLENAME //ex. TABLE_NAME = users
 MAX_AGE = Date.now() + {someNumberHere} * {someNumberHere}
 // ex. Date.now() + 1000 * 60 * 60 --> session will last for 1 hour
 ```
-4. After submitting the form, the user will be redirected to the endpoint of your choice.
+5. After submitting the form, the user will be redirected to the endpoint of your choice.
     - Upon registering, the user will be added to the database with the username and a secure hashed password.
     - On login, the user will be authenticated through your database.
         - A browser cookie will be created as well as a session in local memory storage called "svault-auth".  
@@ -227,7 +227,7 @@ MAX_AGE = Date.now() + {someNumberHere} * {someNumberHere}
         - The session will have an expiration time determined in your `.env` file.
         - Sessions will automatically be cleaned and deleted upon expiration.
     - On logout, the user will be redirected to the home page, the cookie will be deleted from the browser, and the session will be deleted from local memory store.
-5. And you're good to go!
+6. And you're good to go!
 
 <br>
 
