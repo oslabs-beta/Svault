@@ -32,7 +32,7 @@ Svault is an authentication, authorization, and user management library for Svel
 
 
 ![Demo](static/Demo.gif)
-
+This demo simulates implementing authentication functionality into an already existing SvelteKit app. First demonstrating log in component scaffolding without Svault authentication logic. Then moving on to implementing Svault, following documentation specs for the hooks server file. Developers will need to first set up their own log in components (buttons, input forms, etc.) following the Svault documentation for the correct endpoints/actions (this step is not pictured in the demo).
 
 
 ## Installation
