@@ -287,10 +287,11 @@ Svault is an amazing project with many areas for iteration. Here are some of the
 
 
 ## How to Contribute
-1. Fork this repo and clone from your forked repo onto your machine.
-2. Create a new branch that details what feature is being developed.
-3. Commit and push changes to your forked repository.
-4. Submit a Pull Request from your forked remote branch into the Svault repo.
+1. Fork and clone this repository.
+2. Create a new branch on your local repository, giving it a meaningful name, such as one that details what feature is being developed.
+3. Commit and push your work to your own forked repository.
+4. Submit a Pull Request from your forked branch, to the dev branch of the Svault repository.
+5. Your Pull Request will then be reviewed, and then merged if approved!
 
 
 ## The Svault Team
