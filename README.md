@@ -14,7 +14,7 @@ Svault is an authentication, authorization, and user management library for Svel
 ![NPM Version](https://img.shields.io/npm/v/svault?color=%23fb7182&label=version)
 ![MIT License](https://img.shields.io/badge/license-MIT-%23fb7182)
 
-[🔐 Website](https://svault.dev) | [📚 Documentation](https://svault.mintlify.app) | [⌨️ Blog](https://medium.com/@mshelconroy/svault-the-spanish-fly-of-svelte-security) | [💼 LinkedIn](https://www.linkedin.com/company/svault/)
+[🔐 Website](https://svault.dev) | [📚 Documentation](https://svault.mintlify.app) | [⌨️ Blog](https://medium.com/svault/svault-the-spanish-fly-of-svelte-security-beb03fda32be) | [💼 LinkedIn](https://www.linkedin.com/company/svault/)
 
 </div>
 
@@ -145,9 +145,9 @@ export const handle = SvaultNative(redirectPath);
 ```
 2. Create a PostgreSQL table with the following columns:
 ```SQL
-CREATE_TABLE [YOURTABLENAME] (
+CREATE TABLE [YOURTABLENAME] (
     username VARCHAR NOT NULL,
-    password VARCHAR NOT NULL,
+    password VARCHAR NOT NULL
 )
 ```
 3. In your `routes` directory, create a route called `login`. In your login `+page.svelte`, create form elements for taking in username and password inputs. Create buttons for login and register.
