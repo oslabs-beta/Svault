@@ -43,7 +43,7 @@ export async function checkUserCredentials(
   console.log(queryString);
   const result = await db.query(queryString.text, queryString.values);
   
-  //testpush
+  //testpush 2
   // Sends username to frontend
   const workFactor = 10;
   if (result) {
