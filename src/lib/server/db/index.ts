@@ -20,9 +20,11 @@ export async function createUser(
 
   const sql = `
     insert into ${TABLE_NAME} (username, password)
-    values ('${username}', '${hashPassword}')
+    values ($1, $2)
     `;
-  const result = await db.query(sql);
+  const values = [username, hashPassword];
+
+  const result = await db.query(sql, values);
 }
 
 //function to check user credentials
@@ -31,16 +33,21 @@ export async function checkUserCredentials(
   username: string,
   password: string
 ): Promise<any> {
-  const queryString = `
-    select username, password
-      from ${TABLE_NAME}
-      where username = '${username}'
-    `;
-  const result = await db.query(queryString);
+
+  const queryString = {
+    name: 'checkCredentials',
+    text: 'SELECT username, password FROM users WHERE username = $1',
+    values: [username]
+  }
+  //const values = [username];
+  console.log(queryString);
+  const result = await db.query(queryString.text, queryString.values);
+  
 
   // Sends username to frontend
   const workFactor = 10;
   if (result) {
+    console.log(result)
     if (result.rows[0]) {
       return bcrypt
         .compare(password, result.rows[0].password)
