@@ -189,7 +189,7 @@ CREATE TABLE [YOURTABLENAME] (
 ```TypeScript
 // Paste if using native authentication with a PostgreSQL database
 PG_URI = YOURDATABASEURI
-TABLE_NAME = YOURTABLENAME //ex. TABLE_NAME = users
+TABLE_NAME = YOURTABLENAME
 
 //MAX_AGE will determine the expiration time of the user's session
 MAX_AGE = Date.now() + {someNumberHere} * {someNumberHere}
